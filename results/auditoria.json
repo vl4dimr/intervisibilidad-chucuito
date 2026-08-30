@@ -1,5 +1,5 @@
 {
-  "ok": 48,
+  "ok": 50,
   "fallos": 0,
   "items": [
     {
@@ -271,6 +271,18 @@
       "check": "los DOI se escriben con el prefijo «doi:»",
       "ok": true,
       "detalle": "5 de 7 referencias con DOI"
+    },
+    {
+      "bloque": "plantilla",
+      "check": "sin marcadores de posición entre corchetes",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "plantilla",
+      "check": "título en segunda lengua a la izquierda y en cursiva",
+      "ok": true,
+      "detalle": "INTERVISIBILITY OF ARCHAEOLOGICAL SITES "
     },
     {
       "bloque": "fichero",

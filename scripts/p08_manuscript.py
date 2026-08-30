@@ -175,10 +175,10 @@ P("INTERVISIBILIDAD DE SITIOS ARQUEOLÓGICOS EN LA CUENCA DEL TITICACA: ANÁLISI
   14, True, align=WD_ALIGN_PARAGRAPH.CENTER, after=6)
 P("INTERVISIBILITY OF ARCHAEOLOGICAL SITES IN THE TITICACA BASIN: ANALYSIS ON AN OPEN "
   "DIGITAL ELEVATION MODEL WITH NULL MODELS",
-  9, italic=True, align=WD_ALIGN_PARAGRAPH.CENTER, after=10)
-P("[Fichero anónimo conforme a la norma de la revista: los datos de autoría figuran en los metadatos "
-  "de la plataforma y en la carta de presentación.]",
-  8, italic=True, align=WD_ALIGN_PARAGRAPH.CENTER, after=12)
+  9, italic=True, align=WD_ALIGN_PARAGRAPH.LEFT, after=18)
+# El bloque de autoria queda vacio durante la revision ciega. Vacio de verdad:
+# una nota entre corchetes explicando que esta vacio no es un blanco, es un
+# texto, y ademas hace que el manuscrito parezca un borrador sin terminar.
 
 n_sitios = TER["sitios"]
 n_fun = TER["funerarios_por_toponimo"]
@@ -643,8 +643,8 @@ P("El depósito incluye las ejecuciones previas a la corrección de dos de los t
   "tercero, el signo de la corrección por curvatura, se comprueba ejecutando la validación sintética "
   "incluida.")
 
-P("Agradecimientos", 11, True, align=WD_ALIGN_PARAGRAPH.CENTER, before=10, after=6)
-P("[En blanco para la revisión por pares, conforme a la norma de la revista.]", italic=True)
+# Los agradecimientos se anaden al aceptarse el articulo: durante la revision
+# identificarian a los autores, y aqui no hay ninguno que declarar.
 
 P("Referencias", 11, True, align=WD_ALIGN_PARAGRAPH.CENTER, before=10, after=6)
 for _ref in [

@@ -354,6 +354,19 @@ def main():
           all(("http" not in r.split("doi:")[-1]) for r in con_doi),
           "%d de %d referencias con DOI" % (len(con_doi), len(refs)))
 
+    # Marcadores de posicion: lo que se escribe «para rellenar luego» es
+    # exactamente lo que acaba enviandose sin rellenar.
+    corchetes = [p for p in ps if p.strip().startswith("[") and p.strip().endswith("]")]
+    check("plantilla", "sin marcadores de posición entre corchetes", not corchetes,
+          "quedan %d: %s" % (len(corchetes), corchetes[0][:50]) if corchetes else "")
+
+    # El titulo en segunda lengua va alineado a la izquierda (estilo VAR Titulo).
+    t2 = doc.paragraphs[1] if len(doc.paragraphs) > 1 else None
+    check("plantilla", "título en segunda lengua a la izquierda y en cursiva",
+          t2 is not None and t2.alignment == WD_ALIGN_PARAGRAPH.LEFT
+          and t2.runs and t2.runs[0].italic,
+          "%s" % (t2.text[:40] if t2 else "ausente"))
+
     # ------------------------------------------ propiedades del propio fichero
     # La revision es ciega, y las propiedades del .docx son el primer sitio
     # donde mira quien quiera saber quien firma. python-docx las rellena solo.

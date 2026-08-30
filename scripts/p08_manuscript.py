@@ -11,6 +11,7 @@ marcador decimal con punto, encabezados numerados.
 """
 import json
 import os
+import sys
 
 from docx import Document
 from docx.enum.section import WD_SECTION
@@ -18,6 +19,9 @@ from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn
 from docx.shared import Cm, Mm, Pt, RGBColor
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import docmeta
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -673,5 +677,9 @@ for t in doc.tables:
     for r in t.rows:
         for c in r.cells:
             palabras += len(c.text.split())
+# Propiedades del fichero: python-docx firma como autor y la revision es ciega.
+docmeta.limpiar(OUT, autor="", titulo=doc.paragraphs[0].text, asunto="")
+
 print("Manuscrito ->", OUT)
+print("metadatos con contenido:", docmeta.informe(OUT) or "ninguno")
 print("palabras: %d | figuras: %d | tablas: %d" % (palabras, len(doc.inline_shapes), len(doc.tables)))

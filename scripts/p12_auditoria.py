@@ -354,6 +354,31 @@ def main():
           all(("http" not in r.split("doi:")[-1]) for r in con_doi),
           "%d de %d referencias con DOI" % (len(con_doi), len(refs)))
 
+    # ------------------------------------------ propiedades del propio fichero
+    # La revision es ciega, y las propiedades del .docx son el primer sitio
+    # donde mira quien quiera saber quien firma. python-docx las rellena solo.
+    print("\n7. PROPIEDADES DEL FICHERO")
+    cp = doc.core_properties
+    rastro = [k for k in ("author", "last_modified_by", "comments", "category",
+                          "content_status", "identifier", "subject", "keywords")
+              if (getattr(cp, k, "") or "").strip()]
+    check("fichero", "sin autor ni rastro del generador", not rastro,
+          "con contenido: %s" % rastro if rastro else "")
+
+    import zipfile
+    with zipfile.ZipFile(DOCX) as z:
+        crudo = z.read("docProps/core.xml").decode("utf-8")
+        crudo += z.read("docProps/app.xml").decode("utf-8")
+    sospechas = [w for w in ("python-docx", "Macintosh") + tuple(nombres) if w in crudo]
+    check("fichero", "los metadatos XML no delatan nada", not sospechas,
+          "aparece: %s" % sospechas if sospechas else "")
+
+    try:
+        check("fichero", "fecha de creación verosímil", cp.created.year >= 2026,
+              "%s" % cp.created.year)
+    except Exception:
+        check("fichero", "fecha de creación verosímil", False, "ilegible")
+
     print("\n" + "=" * 66)
     print("RESULTADO: %d comprobaciones correctas, %d fallos" % (ok_n, fail_n))
     print("=" * 66)

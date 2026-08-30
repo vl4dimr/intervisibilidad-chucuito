@@ -1,5 +1,5 @@
 {
-  "ok": 45,
+  "ok": 48,
   "fallos": 0,
   "items": [
     {
@@ -271,6 +271,24 @@
       "check": "los DOI se escriben con el prefijo «doi:»",
       "ok": true,
       "detalle": "5 de 7 referencias con DOI"
+    },
+    {
+      "bloque": "fichero",
+      "check": "sin autor ni rastro del generador",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "fichero",
+      "check": "los metadatos XML no delatan nada",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "fichero",
+      "check": "fecha de creación verosímil",
+      "ok": true,
+      "detalle": "2026"
     }
   ]
 }

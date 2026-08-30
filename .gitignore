@@ -17,6 +17,6 @@ VAR_intervisibilidad.docx
 # derivado de Chucuito; fetch_sites_and_dem.py documenta el origen.
 data/sitios_peru.zip
 data/sitios_shp/
-VAR_carta_presentacion.docx
-scripts/p14_carta.py
 plantilla_var/
+VAR_CoverLetter_cumplimentado.docx
+scripts/p15_cover_letter.py

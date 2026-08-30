@@ -69,7 +69,7 @@ doc = Document()
 def page_setup(sec):
     sec.page_width, sec.page_height = Mm(210), Mm(297)
     sec.left_margin = sec.right_margin = Mm((210 - TEXT_W_MM) / 2)
-    sec.top_margin = sec.bottom_margin = Mm(20)
+    sec.top_margin, sec.bottom_margin = Mm(25), Mm(20)   # VAR_Template: 2.5 / 2 cm
 
 
 def set_cols(sec, num):
@@ -196,6 +196,33 @@ for b in ["%d sitios arqueológicos de Chucuito analizados sobre Copernicus DEM 
     p.paragraph_format.line_spacing = 1.0
 doc.add_paragraph()
 
+P("Abstract", 9, True, align=WD_ALIGN_PARAGRAPH.LEFT, after=3)
+P("This paper asks whether the archaeological sites recorded in the province of Chucuito, on the "
+  "Peruvian shore of Lake Titicaca, occupy positions from which they see one another more than chance "
+  "would predict. Line of sight is computed on the Copernicus DEM GLO-30 for the %s pairs formed by the "
+  "%d recorded sites, with a combined correction for Earth curvature and atmospheric refraction, and "
+  "the resulting network is tested against three null models of increasing stringency. The strictest "
+  "translates and rotates the entire site cloud, preserving every mutual distance, and therefore "
+  "isolates placement from configuration. Observed intervisibility density at 5 km is %s against "
+  "%s ± %s under that null (z = %+.2f; p = %s), and holds across the four ranges considered and the "
+  "whole range of plausible structure heights. Restricted to the larger of the two spatially disjoint "
+  "clusters that make up the sample, however, the contrast falls to the margin of conventional "
+  "significance (p = %s), so the evidence is indicative rather than conclusive. The paper further "
+  "documents three artefacts that invert or suppress the result if left uncorrected: the sign of the "
+  "curvature correction, the constant elevation the terrain model assigns to water bodies —%.1f %% of "
+  "the study area— and the orientation bias introduced by a tightly fitted raster extent. All three "
+  "yield plausible and false results."
+  % (mil(n_sitios * (n_sitios - 1) // 2), n_sitios,
+     f(r5["densidad_obs"]), f(r5["nula_media"]), f(r5["nula_sd"]),
+     r5["z"], f(r5["p_unilateral"], 3),
+     f(DIS["distritos"]["juli"]["contraste"]["5000"]["p_unilateral"], 3)
+     if (DIS and DIS["distritos"]["juli"].get("contraste")) else "n. a.",
+     100 * FET.get("fraccion_agua", 0.306) if "fraccion_agua" in FET else 30.6),
+  after=4)
+P("Keywords", 9, True, align=WD_ALIGN_PARAGRAPH.LEFT, after=2)
+P("landscape archaeology; intervisibility; Lake Titicaca basin; null models; digital elevation model; "
+  "open science", after=8)
+
 P("Resumen", 9, True, align=WD_ALIGN_PARAGRAPH.LEFT, after=3)
 P("Se analiza si los sitios arqueológicos registrados en la provincia de Chucuito, en la ribera "
   "peruana del lago Titicaca, ocupan posiciones desde las que se ven entre sí más de lo que cabría "
@@ -222,7 +249,83 @@ P("Se analiza si los sitios arqueológicos registrados en la provincia de Chucui
   after=4)
 P("Palabras clave", 9, True, align=WD_ALIGN_PARAGRAPH.LEFT, after=2)
 P("arqueología del paisaje; intervisibilidad; cuenca del Titicaca; modelos nulos; modelo digital de "
-  "elevación; ciencia abierta", after=12)
+  "elevación; ciencia abierta", after=10)
+
+# La norma exige un extended abstract en ingles de 600 a 900 palabras cuando el
+# articulo va en espanol. Debe cubrir objetivos, metodologia, resultados y
+# conclusiones, y admite citas.
+P("Extended abstract", 9, True, align=WD_ALIGN_PARAGRAPH.LEFT, after=3)
+for _par in [
+    "Funerary monuments in the Lake Titicaca basin are routinely described as having been placed so as "
+    "to be seen. Hyslop (1977), studying the chullpas of the Lupaqa zone —the area of the present-day "
+    "province of Chucuito— argued that these towers marked the territory of kin groups, drawing on "
+    "colonial sources that describe them as boundary markers. The implication, seldom made explicit, is "
+    "that their placement should favour mutual visibility. Bongers, Arkush and Harrower (2012) tested "
+    "that expectation over 80 km² near Sillustani, west of the lake, comparing chullpa visibility "
+    "against 300 random points, and concluded that visibility and elevation governed placement. That "
+    "study, together with its corrigendum (Bongers, Arkush, & Harrower, 2013), is as far as this review "
+    "reaches the only formal test of the hypothesis in the basin.",
+
+    "The objective of this paper is to retest the claim in a different part of the basin, with a "
+    "different measure and a stricter comparison. Two departures from the 2012 design matter. First, "
+    "what is measured is reciprocal intervisibility between sites —the density of the visibility "
+    "network— rather than the size of each site's individual viewshed. Second, the observed network is "
+    "compared against three null models of increasing stringency rather than one.",
+
+    "Methodologically, the analysis rests on fully open data: the archaeological site layer originating "
+    "from Peru's Instituto Nacional de Cultura, and the Copernicus DEM GLO-30 at 30 m resolution. Line "
+    "of sight between each pair of sites is evaluated by sampling the intervening terrain at one sample "
+    "per cell and testing whether the relief intersects the straight line joining observer and target. "
+    "Earth curvature and atmospheric refraction are handled jointly through an effective radius "
+    "R/(1−k) with k = 0.13. The sign of that correction deserves emphasis: written with respect to the "
+    "chord joining the two endpoints, the term d(D−d)/2R is added to the intervening terrain, because "
+    "seen from that chord the Earth bulges between the endpoints and the bulge vanishes at them. "
+    "Subtracting it —which is what the customary phrase «drop due to curvature» suggests— renders the "
+    "Earth concave and prevents any relief from ever blocking at long range.",
+
+    "Because a visibility algorithm fails silently, returning plausible values even when its geometric "
+    "criterion is wrong, the engine was validated against twelve synthetic terrains of known answer "
+    "before touching real relief: a plane, a barrier that must block, the same barrier lowered so that "
+    "it must not, limiting cases that verify the curvature term, target-height effects, a depression "
+    "that can never block, the geometric horizon at 40 km, and symmetry over rough terrain. The engine "
+    "passes all twelve. The sign error described above was caught there, not in the analysis.",
+
+    "The three null models are as follows. The uniform null draws points at random across the terrain "
+    "and reproduces the procedure used hitherto; it almost always returns significance, because real "
+    "sites occupy favourable relief and favourable relief sees more. The elevation-stratified null "
+    "draws cells matching the observed elevation distribution, and so answers whether, given the "
+    "heights they occupy, the sites see more than they should; it follows the stratified approach "
+    "advocated by Wheatley and Gillings (2000) and Lake and Woodman (2003). The rigid null takes the "
+    "site cloud as it stands, preserving every mutual distance, and translates and rotates it across "
+    "the terrain, thereby separating where the sites are from how they are arranged relative to one "
+    "another.",
+
+    "The results are mixed, and the paper reports them as such. Across the whole set of 180 sites the "
+    "observed density at 5 km exceeds the rigid null at conventional significance, and the contrast "
+    "holds at all four ranges examined and across the full range of structure heights, including zero. "
+    "But the sites of Chucuito do not form a continuous cloud: they fall into two spatially disjoint "
+    "groups, Juli and Pomata, whose centroids lie 17.2 km apart. Restricted to Juli, the only group "
+    "large enough to test, the contrast falls to the margin of conventional significance. Part of the "
+    "effect measured on the pooled set therefore derives from its two-group structure rather than from "
+    "site placement. The evidence is indicative, not conclusive.",
+
+    "What does survive without qualification is the comparison between null models: simple random "
+    "sampling attributes to placement an effect several times larger than the one that withstands a "
+    "test controlling for the arrangement of the set. The earlier conclusion stands, but the magnitude "
+    "suggested by random sampling is roughly an order of magnitude greater at long range.",
+
+    "The second contribution is methodological and probably more transferable. Three artefacts "
+    "encountered during the analysis —the sign of the curvature correction, the constant elevation "
+    "assigned to water, and the orientation bias of a tightly fitted raster extent— share an "
+    "uncomfortable property: none produces a visible failure. All three return intervisibility networks "
+    "of reasonable appearance and interpretable statistics. Masking the lake alone shifts the contrast "
+    "from z = %+.2f to z = %+.2f, which is to say it suppresses the result entirely. The runs preceding "
+    "each correction are deposited alongside the code so that these comparisons can be verified rather "
+    "than taken on trust."
+    % ((SINMASK["por_alcance"]["5000"]["z"] if SINMASK else float("nan")), r5["z"]),
+]:
+    P(_par, after=4)
+doc.add_paragraph()
 
 two_col()
 
@@ -234,7 +337,8 @@ P("La visibilidad de los monumentos funerarios es un argumento recurrente en la 
   "controlado por unidades familiares, apoyándose en fuentes coloniales que las describen como mojones. "
   "De ahí se sigue, aunque no siempre se explicite, que su emplazamiento debería favorecer que se vieran "
   "entre sí.")
-P("Bongers, Arkush y Harrower (2012) sometieron esa expectativa a contraste en un área de 80 km² al "
+P("Bongers, Arkush y Harrower (2012), con la corrección posterior de los propios autores (2013), "
+  "sometieron esa expectativa a contraste en un área de 80 km² al "
   "oeste del lago, en el entorno de Sillustani, comparando la visibilidad de las chullpas con la de 300 "
   "puntos aleatorios. Concluyeron que la visibilidad y la altitud actuaron como determinantes del "
   "emplazamiento. Es, hasta donde alcanza esta revisión, la única puesta a prueba formal de la hipótesis "
@@ -329,7 +433,7 @@ if d5:
       % (mil(d5["pares_elegibles"]), mil(d5["aristas"]), f(d5["densidad"]), d5["grado_medio"],
          d5["aislados"],
          f(NUL["observado"]["26000"]["densidad"])))
-    P("La figura 1 recoge el área de estudio con la red a 5 km, y la figura 2, dos perfiles de línea de "
+    P("La Figura 1 recoge el área de estudio con la red a 5 km, y la Figura 2, dos perfiles de línea de "
       "visión de distancia comparable, uno despejado y otro bloqueado, que ilustran qué mide el "
       "criterio de visibilidad empleado.")
 figure("fig_mapa.png", "Figura 1.",
@@ -370,7 +474,7 @@ P("Un segundo artefacto apareció al revisar el nulo rígido. La nube de sitios 
   % ((N300["por_alcance"]["5000"]["z"] if N300 else float("nan")), r5["z"]))
 
 h2("3.4. Contraste con los modelos nulos")
-P("La tabla 1 reúne la densidad observada y la de cada modelo nulo por alcance, y la figura 3 sitúa el "
+P("La Tabla 1 reúne la densidad observada y la de cada modelo nulo por alcance, y la Figura 3 sitúa el "
   "dato observado dentro de las tres distribuciones nulas. La lectura conjunta es la que importa: lo "
   "relevante no es que el valor observado supere a un nulo, sino cuánto se estrecha el margen a medida "
   "que el modelo nulo conserva más rasgos de la configuración real.")
@@ -400,7 +504,7 @@ figure("fig_nulos.png", "Figura 3.",
 h2("3.5. Sensibilidad a los supuestos")
 P("Dos supuestos del cálculo admiten valores distintos de los adoptados, y conviene comprobar si la "
   "conclusión depende de ellos: la altura atribuida a las estructuras y la celda del modelo en que cae "
-  "cada sitio. La tabla 2 recoge el primero.")
+  "cada sitio. La Tabla 2 recoge el primero.")
 if ALT:
     fil = [["%.1f" % float(k), f(v["observado"]), "%s ± %s" % (f(v["nulo_media"], 3), f(v["nulo_sd"], 3)),
             "%+.2f" % v["z"], f(v["p"], 3)]
@@ -424,7 +528,7 @@ if DIS:
     ju = DIS["distritos"]["juli"]
     po = DIS["distritos"]["pomata"]
     P("Los sitios de Chucuito no forman una nube continua sino dos grupos separados por %.1f km de "
-      "relieve: Juli, con %d sitios, y Pomata, con %d, separación visible en la figura 1. El análisis "
+      "relieve: Juli, con %d sitios, y Pomata, con %d, separación visible en la Figura 1. El análisis "
       "anterior los trata como un solo conjunto, lo que tiene dos consecuencias. En los alcances largos "
       "entran al cómputo pares entre grupos que no describen ninguna relación de vecindad y que están "
       "casi siempre bloqueados; y el modelo nulo rígido rota una configuración que en realidad son dos, "
@@ -543,13 +647,17 @@ for _ref in [
     "Arkush, E. N. (2011). Hillforts of the Ancient Andes: Colla Warfare, Society, and Landscape. "
     "Gainesville: University Press of Florida.",
     "Bongers, J., Arkush, E., & Harrower, M. (2012). Landscapes of death: GIS-based analyses of chullpas "
-    "in the western Lake Titicaca basin. Journal of Archaeological Science, 39(6), 1687-1693.",
+    "in the western Lake Titicaca basin. Journal of Archaeological Science, 39(6), 1687-1693. "
+    "doi:10.1016/j.jas.2011.11.018",
+    "Bongers, J., Arkush, E., & Harrower, M. (2013). Corrigendum to \u201cLandscapes of death: GIS-based "
+    "analyses of chullpas in the western Lake Titicaca basin\u201d. Journal of Archaeological Science, "
+    "40(5), 2561. doi:10.1016/j.jas.2013.01.013",
     "Hyslop, J. (1977). Chulpas of the Lupaca Zone of the Peruvian High Plateau. Journal of Field "
-    "Archaeology, 4(2), 149-170.",
+    "Archaeology, 4(2), 149-170. doi:10.1179/009346977791547912",
     "Lake, M. W., & Woodman, P. E. (2003). Visibility studies in archaeology: a review and case study. "
-    "Environment and Planning B: Planning and Design, 30(5), 689-707.",
+    "Environment and Planning B: Planning and Design, 30(5), 689-707. doi:10.1068/b29122",
     "Stanish, C. (2003). Ancient Titicaca: The Evolution of Complex Society in Southern Peru and "
-    "Northern Bolivia. Berkeley: University of California Press.",
+    "Northern Bolivia. Berkeley: University of California Press. doi:10.1525/9780520928190",
     "Wheatley, D., & Gillings, M. (2000). Vision, perception and GIS: developing enriched approaches to "
     "the study of archaeological visibility. En G. R. Lock (ed.), Beyond the Map: Archaeology and "
     "Spatial Technologies (pp. 1-27). Amsterdam: IOS Press.",

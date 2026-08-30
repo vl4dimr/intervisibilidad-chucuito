@@ -18,6 +18,9 @@ Esta auditoria comprueba tres cosas:
   prosa      referencias listadas pero no citadas, tildes perdidas al concatenar
              cadenas, tablas sin anunciar y un resumen que afirme mas de lo que
              sostienen los resultados
+  plantilla  cotejo contra VAR_Template.dot version 13, descargada del portal de
+             la revista: margenes, resumenes en ambos idiomas, extended abstract
+             obligatorio, limites de highlights y palabras clave, cuerpos y DOI
 
 Salida: results/auditoria.json
 """
@@ -234,7 +237,16 @@ def main():
                "rigido", "computo", "seccion", "region", "linea", "area",
                "numero", "metodo", "ademas", "asi", "aqui", "segun", "mas alla",
                "esta establecido", "tambien", "solo se", "deposito"]
-    perdidas = [w for w in ACENTOS if re.search(r"\b%s\b" % w, texto)]
+    # Solo sobre la parte en espanol: el resumen en ingles, el extended abstract
+    # y las referencias usan legitimamente «area», «region» o «section».
+    es = texto
+    for ini, fin in (("Abstract", "Resumen"), ("Extended abstract", "\n1. "), ("Referencias", None)):
+        i = es.find(ini)
+        if i < 0:
+            continue
+        j = es.find(fin, i) if fin else len(es)
+        es = es[:i] + (es[j:] if j > 0 else "")
+    perdidas = [w for w in ACENTOS if re.search(r"\b%s\b" % w, es)]
     check("prosa", "sin palabras que hayan perdido la tilde", not perdidas,
           "revisar: %s" % perdidas if perdidas else "")
 
@@ -256,6 +268,91 @@ def main():
         pj = DIS["distritos"]["juli"]["contraste"]["5000"]["p_unilateral"]
         check("prosa", "el resumen recoge la atenuación por grupos",
               ("%.3f" % pj) in resumen, "p de Juli = %.3f" % pj)
+
+    # ------------------------------------------------ plantilla oficial VAR
+    # Reglas tomadas de VAR_Template.dot (version 13), descargada del portal de
+    # la revista, no de una especificacion reconstruida de memoria. Las cuatro
+    # que fallaban al cotejar por primera vez fueron el margen superior, el
+    # resumen en ingles, el extended abstract y los DOI de las referencias.
+    print("\n6. PLANTILLA OFICIAL DE VAR")
+
+    sec0 = doc.sections[0]
+    mm = lambda v: v / 36000.0
+    margenes = (mm(sec0.top_margin), mm(sec0.bottom_margin),
+                mm(sec0.left_margin), mm(sec0.right_margin))
+    check("plantilla", "márgenes 25 / 20 / 20 / 20 mm",
+          all(abs(a - b) < 1 for a, b in zip(margenes, (25, 20, 20, 20))),
+          "sup %.0f inf %.0f izq %.0f der %.0f" % margenes)
+
+    def bloque(inicio, fin):
+        """Texto entre dos encabezados del preliminar."""
+        try:
+            i, j = ps.index(inicio), ps.index(fin)
+        except ValueError:
+            return None
+        return " ".join(ps[i + 1:j])
+
+    limpio = [p.strip() for p in ps]
+    ps_ = limpio
+
+    def entre(a, b):
+        try:
+            return " ".join(ps_[ps_.index(a) + 1:ps_.index(b)])
+        except ValueError:
+            return None
+
+    ab = entre("Abstract", "Keywords")
+    check("plantilla", "resumen en inglés, hasta 300 palabras",
+          ab is not None and len(ab.split()) <= 300,
+          "%d palabras" % len(ab.split()) if ab else "AUSENTE")
+
+    res = entre("Resumen", "Palabras clave")
+    check("plantilla", "resumen en español, hasta 300 palabras",
+          res is not None and len(res.split()) <= 300,
+          "%d palabras" % len(res.split()) if res else "AUSENTE")
+
+    # Obligatorio cuando el articulo va en espanol.
+    ext = None
+    for cierre in ps_:
+        if cierre.startswith("1. "):
+            ext = entre("Extended abstract", cierre)
+            break
+    n_ext = len(ext.split()) if ext else 0
+    check("plantilla", "extended abstract en inglés, de 600 a 900 palabras",
+          600 <= n_ext <= 900, "%d palabras" % n_ext if ext else "AUSENTE")
+
+    vinetas = [p for p in doc.paragraphs if p.style.name == "List Bullet"]
+    largos = [len(p.text) for p in vinetas]
+    check("plantilla", "tres highlights de 190 caracteres como máximo",
+          len(vinetas) == 3 and all(n <= 190 for n in largos),
+          "%d viñetas, máximo %d caracteres" % (len(vinetas), max(largos) if largos else 0))
+
+    for etiqueta, cab in (("inglés", "Keywords"), ("español", "Palabras clave")):
+        try:
+            linea = ps_[ps_.index(cab) + 1]
+            n = len([x for x in linea.split(";") if x.strip()])
+            check("plantilla", "hasta seis palabras clave en %s" % etiqueta, n <= 6, "%d" % n)
+        except ValueError:
+            check("plantilla", "hasta seis palabras clave en %s" % etiqueta, False, "AUSENTE")
+
+    # Cuerpos: H1 a 11, H2 a 10, texto a 9, tablas y pies a 8.
+    h1 = {p.runs[0].font.size.pt for p in doc.paragraphs
+          if re.match(r"^\d+\.\s", p.text.strip()) and p.runs and p.runs[0].font.size}
+    h2 = {p.runs[0].font.size.pt for p in doc.paragraphs
+          if re.match(r"^\d+\.\d+\.\s", p.text.strip()) and p.runs and p.runs[0].font.size}
+    check("plantilla", "encabezados de nivel 1 a cuerpo 11", h1 == {11.0}, "%s" % sorted(h1))
+    check("plantilla", "encabezados de nivel 2 a cuerpo 10", h2 == {10.0}, "%s" % sorted(h2))
+
+    t_tab = {r.font.size.pt for t in doc.tables for row in t.rows for c in row.cells
+             for p in c.paragraphs for r in p.runs if r.font.size}
+    check("plantilla", "tablas a cuerpo 8", t_tab == {8.0}, "%s" % sorted(t_tab))
+
+    # APA 6.a con DOI cuando exista, en la forma «doi:».
+    refs = [p for p in ps_ if re.match(r"^[A-Z][a-zA-Z\-]+,\s+[A-Z]\.", p)]
+    con_doi = [r for r in refs if "doi:" in r]
+    check("plantilla", "los DOI se escriben con el prefijo «doi:»",
+          all(("http" not in r.split("doi:")[-1]) for r in con_doi),
+          "%d de %d referencias con DOI" % (len(con_doi), len(refs)))
 
     print("\n" + "=" * 66)
     print("RESULTADO: %d comprobaciones correctas, %d fallos" % (ok_n, fail_n))

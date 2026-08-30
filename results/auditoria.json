@@ -1,5 +1,5 @@
 {
-  "ok": 34,
+  "ok": 45,
   "fallos": 0,
   "items": [
     {
@@ -36,7 +36,7 @@
       "bloque": "formato",
       "check": "texto justificado",
       "ok": true,
-      "detalle": "44 de 44"
+      "detalle": "54 de 54"
     },
     {
       "bloque": "formato",
@@ -174,7 +174,7 @@
       "bloque": "prosa",
       "check": "toda referencia listada está citada",
       "ok": true,
-      "detalle": "6 referencias"
+      "detalle": "7 referencias"
     },
     {
       "bloque": "prosa",
@@ -205,6 +205,72 @@
       "check": "el resumen recoge la atenuación por grupos",
       "ok": true,
       "detalle": "p de Juli = 0.074"
+    },
+    {
+      "bloque": "plantilla",
+      "check": "márgenes 25 / 20 / 20 / 20 mm",
+      "ok": true,
+      "detalle": "sup 25 inf 20 izq 20 der 20"
+    },
+    {
+      "bloque": "plantilla",
+      "check": "resumen en inglés, hasta 300 palabras",
+      "ok": true,
+      "detalle": "223 palabras"
+    },
+    {
+      "bloque": "plantilla",
+      "check": "resumen en español, hasta 300 palabras",
+      "ok": true,
+      "detalle": "245 palabras"
+    },
+    {
+      "bloque": "plantilla",
+      "check": "extended abstract en inglés, de 600 a 900 palabras",
+      "ok": true,
+      "detalle": "839 palabras"
+    },
+    {
+      "bloque": "plantilla",
+      "check": "tres highlights de 190 caracteres como máximo",
+      "ok": true,
+      "detalle": "3 viñetas, máximo 166 caracteres"
+    },
+    {
+      "bloque": "plantilla",
+      "check": "hasta seis palabras clave en inglés",
+      "ok": true,
+      "detalle": "6"
+    },
+    {
+      "bloque": "plantilla",
+      "check": "hasta seis palabras clave en español",
+      "ok": true,
+      "detalle": "6"
+    },
+    {
+      "bloque": "plantilla",
+      "check": "encabezados de nivel 1 a cuerpo 11",
+      "ok": true,
+      "detalle": "[11.0]"
+    },
+    {
+      "bloque": "plantilla",
+      "check": "encabezados de nivel 2 a cuerpo 10",
+      "ok": true,
+      "detalle": "[10.0]"
+    },
+    {
+      "bloque": "plantilla",
+      "check": "tablas a cuerpo 8",
+      "ok": true,
+      "detalle": "[8.0]"
+    },
+    {
+      "bloque": "plantilla",
+      "check": "los DOI se escriben con el prefijo «doi:»",
+      "ok": true,
+      "detalle": "5 de 7 referencias con DOI"
     }
   ]
 }

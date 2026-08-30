@@ -1,0 +1,118 @@
+{
+  "n_null": 500,
+  "alcances_m": [
+    5000.0,
+    10000.0,
+    15000.0
+  ],
+  "min_sitios": 30,
+  "distritos": {
+    "juli": {
+      "n_sitios": 168,
+      "n_funerarios": 17,
+      "observado": {
+        "5000": {
+          "n_sitios": 168,
+          "pares_elegibles": 6227,
+          "aristas": 2538,
+          "densidad": 0.40757989400995664,
+          "grado_medio": 30.214285714285715,
+          "grado_max": 72,
+          "aislados": 1,
+          "componentes": 2,
+          "componente_mayor": 167
+        },
+        "10000": {
+          "n_sitios": 168,
+          "pares_elegibles": 12285,
+          "aristas": 3878,
+          "densidad": 0.3156695156695157,
+          "grado_medio": 46.166666666666664,
+          "grado_max": 108,
+          "aislados": 0,
+          "componentes": 1,
+          "componente_mayor": 168
+        },
+        "15000": {
+          "n_sitios": 168,
+          "pares_elegibles": 14014,
+          "aristas": 3999,
+          "densidad": 0.28535749964321394,
+          "grado_medio": 47.607142857142854,
+          "grado_max": 110,
+          "aislados": 0,
+          "componentes": 1,
+          "componente_mayor": 168
+        }
+      },
+      "contraste": {
+        "5000": {
+          "densidad_obs": 0.40757989400995664,
+          "nula_media": 0.21784847112311825,
+          "nula_sd": 0.11281764938421904,
+          "p_unilateral": 0.07385229540918163,
+          "z": 1.6817530228863116,
+          "n_colocaciones": 500
+        },
+        "10000": {
+          "densidad_obs": 0.3156695156695157,
+          "nula_media": 0.1439706440755133,
+          "nula_sd": 0.08418290211430944,
+          "p_unilateral": 0.059880239520958084,
+          "z": 2.039593163001884,
+          "n_colocaciones": 500
+        },
+        "15000": {
+          "densidad_obs": 0.28535749964321394,
+          "nula_media": 0.13016435603222895,
+          "nula_sd": 0.07643089300633978,
+          "p_unilateral": 0.059880239520958084,
+          "z": 2.0305028177298943,
+          "n_colocaciones": 500
+        }
+      }
+    },
+    "pomata": {
+      "n_sitios": 12,
+      "n_funerarios": 7,
+      "observado": {
+        "5000": {
+          "n_sitios": 12,
+          "pares_elegibles": 55,
+          "aristas": 34,
+          "densidad": 0.6181818181818182,
+          "grado_medio": 5.666666666666667,
+          "grado_max": 9,
+          "aislados": 2,
+          "componentes": 3,
+          "componente_mayor": 10
+        },
+        "10000": {
+          "n_sitios": 12,
+          "pares_elegibles": 66,
+          "aristas": 43,
+          "densidad": 0.6515151515151515,
+          "grado_medio": 7.166666666666667,
+          "grado_max": 10,
+          "aislados": 1,
+          "componentes": 2,
+          "componente_mayor": 11
+        },
+        "15000": {
+          "n_sitios": 12,
+          "pares_elegibles": 66,
+          "aristas": 43,
+          "densidad": 0.6515151515151515,
+          "grado_medio": 7.166666666666667,
+          "grado_max": 10,
+          "aislados": 1,
+          "componentes": 2,
+          "componente_mayor": 11
+        }
+      },
+      "contraste": null,
+      "nota": "Grupo demasiado pequeno para contrastar: con 12 sitios el modelo nulo no tiene potencia y cualquier valor p seria ilustrativo."
+    }
+  },
+  "separacion_centroides_km": 17.177639222968217
+}

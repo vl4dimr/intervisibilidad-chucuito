@@ -1,0 +1,210 @@
+{
+  "ok": 34,
+  "fallos": 0,
+  "items": [
+    {
+      "bloque": "formato",
+      "check": "fuente única Arial",
+      "ok": true,
+      "detalle": "fuentes ['Arial'], heredadas 0"
+    },
+    {
+      "bloque": "formato",
+      "check": "sin color distinto del negro",
+      "ok": true,
+      "detalle": "colores: ['000000']"
+    },
+    {
+      "bloque": "formato",
+      "check": "caja de texto de 170 mm",
+      "ok": true,
+      "detalle": "170 mm"
+    },
+    {
+      "bloque": "formato",
+      "check": "cuerpo a dos columnas",
+      "ok": true,
+      "detalle": "secciones: 12"
+    },
+    {
+      "bloque": "formato",
+      "check": "texto corrido a cuerpo 9",
+      "ok": true,
+      "detalle": "cuerpos: [9.0]"
+    },
+    {
+      "bloque": "formato",
+      "check": "texto justificado",
+      "ok": true,
+      "detalle": "43 de 43"
+    },
+    {
+      "bloque": "formato",
+      "check": "marcador decimal con punto",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "formato",
+      "check": "fichero anónimo",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "figuras",
+      "check": "fig_mapa.png: resolución",
+      "ok": true,
+      "detalle": "3000x1920 px, 299 dpi"
+    },
+    {
+      "bloque": "figuras",
+      "check": "fig_perfiles.png: resolución",
+      "ok": true,
+      "detalle": "2700x1680 px, 299 dpi"
+    },
+    {
+      "bloque": "figuras",
+      "check": "fig_nulos.png: resolución",
+      "ok": true,
+      "detalle": "3150x1020 px, 299 dpi"
+    },
+    {
+      "bloque": "figuras",
+      "check": "tres figuras incrustadas",
+      "ok": true,
+      "detalle": "3 incrustadas"
+    },
+    {
+      "bloque": "figuras",
+      "check": "Figura 1 citada en el texto",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "figuras",
+      "check": "Figura 2 citada en el texto",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "figuras",
+      "check": "Figura 3 citada en el texto",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "figuras",
+      "check": "pies numerados y presentes",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "figuras",
+      "check": "tablas numeradas y presentes",
+      "ok": true,
+      "detalle": "2 pies, 2 tablas"
+    },
+    {
+      "bloque": "contenido",
+      "check": "número de sitios",
+      "ok": true,
+      "detalle": "180"
+    },
+    {
+      "bloque": "contenido",
+      "check": "sitios con topónimo funerario",
+      "ok": true,
+      "detalle": "24"
+    },
+    {
+      "bloque": "contenido",
+      "check": "casos de validación superados",
+      "ok": true,
+      "detalle": "12 de 12"
+    },
+    {
+      "bloque": "contenido",
+      "check": "z del nulo rígido a 5 km",
+      "ok": true,
+      "detalle": "+2.63"
+    },
+    {
+      "bloque": "contenido",
+      "check": "densidad observada a 5 km",
+      "ok": true,
+      "detalle": "0.4094"
+    },
+    {
+      "bloque": "contenido",
+      "check": "rango z del nulo uniforme citado",
+      "ok": true,
+      "detalle": "de +5.95 a +25.55"
+    },
+    {
+      "bloque": "contenido",
+      "check": "z de Juli a 5 km",
+      "ok": true,
+      "detalle": "+1.68"
+    },
+    {
+      "bloque": "contenido",
+      "check": "p de Juli a 5 km",
+      "ok": true,
+      "detalle": "0.074"
+    },
+    {
+      "bloque": "contenido",
+      "check": "separación entre centroides",
+      "ok": true,
+      "detalle": "17.2 km"
+    },
+    {
+      "bloque": "contenido",
+      "check": "p de la subred funeraria",
+      "ok": true,
+      "detalle": "0.526"
+    },
+    {
+      "bloque": "contenido",
+      "check": "todo valor z citado existe en los resultados",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "prosa",
+      "check": "toda referencia listada está citada",
+      "ok": true,
+      "detalle": "6 referencias"
+    },
+    {
+      "bloque": "prosa",
+      "check": "sin palabras que hayan perdido la tilde",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "prosa",
+      "check": "Tabla 1 citada en el texto",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "prosa",
+      "check": "Tabla 2 citada en el texto",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "prosa",
+      "check": "separador de millar uniforme",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "prosa",
+      "check": "el resumen recoge la atenuación por grupos",
+      "ok": true,
+      "detalle": "p de Juli = 0.074"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+title: >-
+  Intervisibilidad de sitios arqueológicos en la cuenca del Titicaca: código,
+  datos derivados y contraejemplos
+message: >-
+  Si utiliza este material, cite el artículo asociado y este depósito.
+type: software
+authors:
+  - given-names: Milton Vladimir
+    family-names: Mamani Calisaya
+    orcid: 'https://orcid.org/0000-0002-0676-0989'
+    affiliation: Universidad Nacional del Altiplano, Puno, Perú
+  - given-names: Duany Nilka
+    family-names: Mamani Calisaya
+    orcid: 'https://orcid.org/0000-0003-0457-5680'
+    affiliation: Universidad Nacional del Altiplano, Puno, Perú
+  - given-names: Vicente
+    family-names: Alanoca Arocutipa
+    orcid: 'https://orcid.org/0000-0001-9111-0704'
+    affiliation: Universidad Nacional del Altiplano, Puno, Perú
+abstract: >-
+  Código y datos derivados del análisis de intervisibilidad entre los 180 sitios
+  arqueológicos registrados en la provincia de Chucuito (Puno, Perú), sobre el
+  Copernicus DEM GLO-30 con corrección de curvatura y refracción. Incluye el
+  motor de línea de visión con su validación sobre doce terrenos sintéticos, los
+  tres modelos nulos de exigencia creciente, el análisis de sensibilidad y el
+  desglose por distrito. Se depositan además las ejecuciones previas a la
+  corrección de los tres artefactos descritos, para que la comparación que
+  sostiene el argumento metodológico pueda verificarse.
+keywords:
+  - arqueología del paisaje
+  - intervisibilidad
+  - cuenca del Titicaca
+  - chullpas
+  - modelos nulos
+  - modelo digital de elevación
+  - ciencia abierta
+license: MIT

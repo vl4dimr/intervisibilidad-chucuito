@@ -1,0 +1,42 @@
+{
+  "n_null": 300,
+  "mascara_agua": false,
+  "alcances_m": [
+    5000.0,
+    10000.0,
+    15000.0,
+    26000.0
+  ],
+  "semilla": 20260831,
+  "por_alcance": {
+    "5000": {
+      "densidad_obs": 0.4094237503979624,
+      "nula_media": 0.4335023048073726,
+      "nula_sd": 0.3155704243221634,
+      "p_unilateral": 0.4152823920265781,
+      "z": -0.0763016827737589
+    },
+    "10000": {
+      "densidad_obs": 0.31736139214892756,
+      "nula_media": 0.3671492108838061,
+      "nula_sd": 0.3198369005376249,
+      "p_unilateral": 0.39867109634551495,
+      "z": -0.15566627443921718
+    },
+    "15000": {
+      "densidad_obs": 0.28417415342087077,
+      "nula_media": 0.33821578600387103,
+      "nula_sd": 0.29815206579599784,
+      "p_unilateral": 0.40863787375415284,
+      "z": -0.18125526797448632
+    },
+    "26000": {
+      "densidad_obs": 0.257199726317099,
+      "nula_media": 0.30939313559520004,
+      "nula_sd": 0.26867181066230256,
+      "p_unilateral": 0.4219269102990033,
+      "z": -0.19426455328320139
+    }
+  },
+  "nota": "Ejecucion deliberadamente sin mascara de agua, para documentar el efecto del artefacto. No es un resultado del analisis sino su contraejemplo."
+}

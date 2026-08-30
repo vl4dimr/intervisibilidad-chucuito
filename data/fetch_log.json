@@ -1,0 +1,16 @@
+{
+  "sitios_fuente": "INC / Ministerio de Cultura, redistribuido por Geo GPS Peru",
+  "sitios_licencia": "no declarada por el redistribuidor; verificar antes de publicar",
+  "sitios_puno": 507,
+  "sitios_funerarios": 35,
+  "dem_fuente": "Copernicus DEM GLO-30 (ESA), bucket publico de AWS",
+  "dem_licencia": "Copernicus, uso libre con atribucion",
+  "dem_teselas_pedidas": 9,
+  "dem_teselas_obtenidas": 9,
+  "extension": {
+    "lat_min": -16.409453693,
+    "lat_max": -14.215175517,
+    "lon_min": -70.966477609,
+    "lon_max": -68.845136788
+  }
+}

@@ -1,0 +1,21 @@
+# Mosaico de teselas Copernicus: 313 MB que se reconstruyen con p01_terrain.py
+data/dem/
+
+# Ficheros temporales de Word al abrir el manuscrito
+~$*.docx
+
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# El manuscrito va a la revista, no al repositorio: VAR revisa a doble ciego y
+# publicarlo aqui equivaldria a un preprint identificable por los metadatos.
+VAR_intervisibilidad.docx
+
+# Redistribucion integra de la capa nacional del INC (7907 sitios, licencia no
+# declarada por el redistribuidor). Para reproducir este trabajo basta el
+# derivado de Chucuito; fetch_sites_and_dem.py documenta el origen.
+data/sitios_peru.zip
+data/sitios_shp/
+VAR_carta_presentacion.docx
+scripts/p14_carta.py

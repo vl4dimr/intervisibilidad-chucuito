@@ -1,0 +1,95 @@
+{
+  "casos": [
+    {
+      "caso": "terreno plano, 6 km",
+      "esperado": true,
+      "obtenido": true,
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "caso": "barrera de 50 m a mitad de camino",
+      "esperado": false,
+      "obtenido": false,
+      "ok": true,
+      "detalle": "observador 1,7 m, objetivo 3 m"
+    },
+    {
+      "caso": "misma barrera rebajada a 1 m",
+      "esperado": true,
+      "obtenido": true,
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "caso": "barrera de 1,5 m, umbral efectivo 1.74 m",
+      "esperado": true,
+      "obtenido": true,
+      "ok": true,
+      "detalle": "por debajo del umbral corregido"
+    },
+    {
+      "caso": "barrera de 2,0 m, umbral efectivo 1.74 m",
+      "esperado": false,
+      "obtenido": false,
+      "ok": true,
+      "detalle": "sin curvatura no bloquearia: la prueba la exige"
+    },
+    {
+      "caso": "barrera de 4 m con objetivo de 3 m",
+      "esperado": false,
+      "obtenido": false,
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "caso": "barrera de 4 m con objetivo de 12 m",
+      "esperado": true,
+      "obtenido": true,
+      "ok": true,
+      "detalle": "la altura de la torre salva el obstaculo"
+    },
+    {
+      "caso": "depresion de 30 m",
+      "esperado": true,
+      "obtenido": true,
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "caso": "plano de 40 km, mas alla del horizonte",
+      "esperado": false,
+      "obtenido": false,
+      "ok": true,
+      "detalle": "horizonte teorico 11.6 km"
+    },
+    {
+      "caso": "plano de 6 km, dentro del horizonte",
+      "esperado": true,
+      "obtenido": true,
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "caso": "descenso por curvatura a 26 km",
+      "esperado": 11.539,
+      "obtenido": 11.539,
+      "ok": true,
+      "detalle": "metros"
+    },
+    {
+      "caso": "simetria con alturas iguales, 60 pares",
+      "esperado": true,
+      "obtenido": true,
+      "ok": true,
+      "detalle": "terreno rugoso aleatorio"
+    }
+  ],
+  "superados": 12,
+  "total": 12,
+  "parametros": {
+    "resolucion_m": 30.0,
+    "k_refraccion": 0.13,
+    "radio_efectivo_m": 7322988.505747126
+  }
+}

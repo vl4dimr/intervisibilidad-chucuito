@@ -1,0 +1,33 @@
+{
+  "n_sitios": 180,
+  "n_funerarios": 24,
+  "n_permutaciones": 20000,
+  "altitud_media_funerarios": 3926.8916666666664,
+  "altitud_media_resto": 3913.8397435897436,
+  "por_alcance": {
+    "5000": {
+      "densidad_funeraria": 0.4251968503937008,
+      "pares_elegibles": 127,
+      "densidad_aleatoria_media": 0.4361203580323805,
+      "densidad_aleatoria_sd": 0.10575499380124781,
+      "p_unilateral": 0.5258237088145593,
+      "z": -0.10329070284103006
+    },
+    "10000": {
+      "densidad_funeraria": 0.358974358974359,
+      "pares_elegibles": 156,
+      "densidad_aleatoria_media": 0.339777033281891,
+      "densidad_aleatoria_sd": 0.08156862439887887,
+      "p_unilateral": 0.38668066596670164,
+      "z": 0.23535183820915118
+    },
+    "15000": {
+      "densidad_funeraria": 0.32748538011695905,
+      "pares_elegibles": 171,
+      "densidad_aleatoria_media": 0.3043067563100723,
+      "densidad_aleatoria_sd": 0.07558628348982761,
+      "p_unilateral": 0.3525323733813309,
+      "z": 0.30665119035791866
+    }
+  }
+}

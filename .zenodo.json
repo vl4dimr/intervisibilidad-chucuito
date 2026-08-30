@@ -1,0 +1,35 @@
+{
+  "title": "Intervisibilidad de sitios arqueológicos en la cuenca del Titicaca: código, datos derivados y contraejemplos",
+  "description": "<p>Código y datos derivados del análisis de intervisibilidad entre los 180 sitios arqueológicos registrados en la provincia de Chucuito (Puno, Perú), calculado sobre el Copernicus DEM GLO-30 con corrección de curvatura terrestre y refracción atmosférica.</p><p>Incluye el motor de línea de visión y su validación sobre doce terrenos sintéticos de respuesta conocida; los tres modelos nulos de exigencia creciente (uniforme, estratificado por altitud y rígido con traslación y rotación que conserva todas las distancias mutuas); el análisis de sensibilidad frente a la altura de estructura y a la asignación de celda; el desglose por distrito; y los guiones que generan las figuras y el manuscrito.</p><p>Se depositan además los <strong>contraejemplos</strong>: las ejecuciones previas a la corrección de los tres artefactos descritos en el artículo —el nulo rígido calculado sin enmascarar el lago y el calculado sobre un recorte ajustado que sesgaba las orientaciones—, para que la comparación que sostiene el argumento metodológico pueda verificarse y no haya que creerla.</p><p>Las teselas originales del modelo de elevación (313 MB) no se incluyen: son de descarga libre y el guion p01_terrain.py las reconstruye. Sí se incluye el mosaico recortado del área de estudio.</p>",
+  "upload_type": "software",
+  "license": "MIT",
+  "language": "spa",
+  "creators": [
+    {
+      "name": "Mamani Calisaya, Milton Vladimir",
+      "orcid": "0000-0002-0676-0989",
+      "affiliation": "Universidad Nacional del Altiplano, Puno, Perú"
+    },
+    {
+      "name": "Mamani Calisaya, Duany Nilka",
+      "orcid": "0000-0003-0457-5680",
+      "affiliation": "Universidad Nacional del Altiplano, Puno, Perú"
+    },
+    {
+      "name": "Alanoca Arocutipa, Vicente",
+      "orcid": "0000-0001-9111-0704",
+      "affiliation": "Universidad Nacional del Altiplano, Puno, Perú"
+    }
+  ],
+  "keywords": [
+    "arqueología del paisaje",
+    "intervisibilidad",
+    "cuenca del Titicaca",
+    "chullpas",
+    "modelos nulos",
+    "modelo digital de elevación",
+    "Copernicus DEM",
+    "sistemas de información geográfica",
+    "ciencia abierta"
+  ]
+}

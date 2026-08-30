@@ -1,0 +1,30 @@
+{
+  "provincia": "chucuito",
+  "sitios": 180,
+  "funerarios_por_toponimo": 24,
+  "margen_km": 18.0,
+  "dem_shape": [
+    1662,
+    2082
+  ],
+  "dem_resolucion_grados": [
+    0.0002777777777777778,
+    0.0002777777777777778
+  ],
+  "dem_resolucion_m_aprox": [
+    29.65569638288131,
+    30.887479623488534
+  ],
+  "altitud_min": 3813.396728515625,
+  "altitud_max": 4643.6279296875,
+  "altitud_media_sitios": 3915.26171875,
+  "altitud_media_terreno": 3947.10791015625,
+  "centro": {
+    "lat": -16.23556862962222,
+    "lon": -69.46274400267222
+  },
+  "extension_m": {
+    "x": 25756.08141777056,
+    "y": 15334.155555967194
+  }
+}

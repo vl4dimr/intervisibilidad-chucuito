@@ -20,6 +20,9 @@ from docx.oxml.ns import qn
 from docx.shared import Cm, Mm, Pt, RGBColor
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# DOI de concepto del deposito en Zenodo: apunta siempre a la ultima version.
+DOI_CONCEPTO = "10.5281/zenodo.22176260"
 RES = os.path.join(BASE, "results")
 FIG = os.path.join(RES, "figuras")
 OUT = os.path.join(BASE, "VAR_intervisibilidad.docx")
@@ -521,12 +524,16 @@ P("El paso más útil sería incorporar cronología: con los sitios fechados, la
 
 # ==================================================== reproducibilidad
 h1("5. Disponibilidad de datos y código")
-P("El código que reconstruye el análisis completo, los datos derivados y los ficheros de resultados se "
-  "depositan con identificador persistente. El modelo de elevación es Copernicus DEM GLO-30, de uso "
-  "libre con atribución; la capa de sitios se cita según su procedencia declarada, con la reserva "
-  "expuesta en el apartado 2.1. Se conservan además los resultados previos a la corrección de los tres "
-  "artefactos descritos, para permitir la comparación.")
-P("[DOI pendiente de asignación en el momento del envío.]", italic=True)
+P("El código que reconstruye el análisis completo, los datos derivados y los ficheros de resultados "
+  "están depositados con identificador persistente, bajo licencia MIT: "
+  "https://doi.org/%s. El modelo de elevación es Copernicus DEM GLO-30, de uso libre con "
+  "atribución; la capa de sitios se cita según su procedencia declarada, con la reserva expuesta en el "
+  "apartado 2.1." % DOI_CONCEPTO)
+P("El depósito incluye las ejecuciones previas a la corrección de dos de los tres artefactos descritos "
+  "—el nulo rígido calculado sin enmascarar el lago y el calculado sobre el recorte ajustado—, de modo "
+  "que las comparaciones del apartado 3 puedan verificarse y no haya que tomarlas por buenas. El "
+  "tercero, el signo de la corrección por curvatura, se comprueba ejecutando la validación sintética "
+  "incluida.")
 
 P("Agradecimientos", 11, True, align=WD_ALIGN_PARAGRAPH.CENTER, before=10, after=6)
 P("[En blanco para la revisión por pares, conforme a la norma de la revista.]", italic=True)

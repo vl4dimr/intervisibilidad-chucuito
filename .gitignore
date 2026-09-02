@@ -20,3 +20,5 @@ data/sitios_shp/
 plantilla_var/
 VAR_CoverLetter_cumplimentado.docx
 scripts/p15_cover_letter.py
+datos_para_ojs.txt
+ENVIO_VAR/

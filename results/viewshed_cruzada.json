@@ -1,0 +1,24 @@
+{
+  "observador": {
+    "nombre": "Gentilmoko  Yacari",
+    "col_utm": 955,
+    "fila_utm": 804,
+    "altitud_dem": 4145.0771484375
+  },
+  "parametros": {
+    "h_obs": 1.7,
+    "h_tgt": 3.0,
+    "alcance_m": 10000.0,
+    "cc": 0.87,
+    "crs": "EPSG:32719",
+    "res_m": 30.0
+  },
+  "celdas_evaluadas": 349113,
+  "visibles_gdal": 2274,
+  "visibles_nuestro": 2160,
+  "acuerdo": 0.9992437978534171,
+  "solo_gdal": 189,
+  "solo_nuestro": 75,
+  "dist_media_desacuerdo_m": 1984.268034952493,
+  "dist_media_total_m": 6667.116843654143
+}

@@ -199,6 +199,14 @@ def figura_planta():
     out = os.path.join(FIG, "fig3d_planta.png")
     fig.savefig(out, dpi=300)
     plt.close(fig)
+    # El recuento va a un JSON para que el manuscrito lo lea en lugar de
+    # escribirlo a mano: es la misma disciplina que el resto de cifras.
+    json.dump({"observador": obs["nombre"].strip(), "altitud_m": round(float(obs["altitud"]), 1),
+               "alcance_m": 10000, "radio_figura_m": 10500,
+               "tumbas_en_figura": n_vis + n_oc, "tumbas_visibles": n_vis,
+               "tumbas_ocultas": n_oc},
+              open(os.path.join(RES, "cuenca_torre.json"), "w", encoding="utf-8"),
+              ensure_ascii=False, indent=2)
     print("-> %s | visibles %d, ocultos %d" % (out, n_vis, n_oc))
 
 

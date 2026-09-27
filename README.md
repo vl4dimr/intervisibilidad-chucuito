@@ -91,6 +91,30 @@ plano, barrera que bloquea, la misma rebajada que no debe bloquear, casos límit
 término de curvatura, efecto de la altura del objetivo, depresión que nunca bloquea, horizonte
 geométrico a 40 km y simetría sobre terreno rugoso. **12 de 12.**
 
+**Validación cruzada frente a gdal_viewshed.** La cuenca visual desde el sitio funerario más alto del corpus
+(Gentilmoko Yacari, 4 144 m, Juli) se calcula dos veces sobre el mismo ráster reproyectado a UTM 19S a 30 m
+—una con `gdal_viewshed` a través de `qgis_process` y otra con el motor propio— con parámetros idénticos
+(observador 1.7 m, objetivo 3.0 m, alcance 10 km, coeficiente de curvatura 0.87 = 1 − k). Coinciden en el
+**99.92 %** de las 349 113 celdas; los desacuerdos caen en bordes de relieve cercano (distancia media 1 984 m
+frente a 6 667 m del total), el patrón que Fisher (1993) describió. `results/viewshed_cruzada.json`.
+
+## El paisaje visual en 3D
+
+La misma cuenca visual se presenta de tres formas, todas generadas por código a partir de los mismos ficheros:
+
+| Vista | Fichero | Cómo se genera |
+|---|---|---|
+| Planta con sombreado, cuenca y tumbas | `results/figuras/fig3d_planta.png` | `PLANTA=1 python scripts/p18_fig3d_cuenca.py` |
+| Perspectiva 3D con oclusión correcta (algoritmo del pintor) | `results/figuras/fig3d_perspectiva.png` | `python scripts/p21_fig3d_perspectiva.py` |
+| Visor web interactivo autocontenido (Three.js, un solo HTML) | `chucuito_visor3d.html` | `python scripts/p20_visor3d_web.py` |
+| Proyecto QGIS listo para la vista de mapa 3D | `chucuito_3d.qgz` | `python-qgis-ltr scripts/p19_proyecto_qgis.py` |
+
+Desde esa torre, **0 de las 16** tumbas situadas a menos de 10 km son visibles (`results/cuenca_torre.json`):
+es la versión en una imagen del resultado de la subred funeraria. La perspectiva con `plot_surface`
+(`p16_render3d.py`, `fig3d_cuenca.png`) se conserva como exploración: matplotlib no ordena en profundidad los
+marcadores y las tumbas desaparecen tras el relieve; `p21` resuelve ese problema pintando celdas y marcadores
+de atrás hacia delante.
+
 ## Guiones
 
 Se ejecutan en orden. Cada uno deja su resultado en `results/` como JSON legible.
@@ -110,7 +134,15 @@ python scripts/p10_null_alturas.py      # sensibilidad a la altura de estructura
 python scripts/p11_por_distrito.py      # desglose Juli / Pomata
 python scripts/p12_auditoria.py         # auditoría de formato, figuras y cifras
 python scripts/p13_artefacto_agua.py    # contraejemplo: nulo sin enmascarar el lago
+python scripts/p17_viewshed_cruzada.py  # validación cruzada: motor propio frente a gdal_viewshed (QGIS)
+PLANTA=1 python scripts/p18_fig3d_cuenca.py   # cuenca de la torre más alta en planta + cuenca_torre.json
+python scripts/p20_visor3d_web.py       # visor web 3D interactivo (chucuito_visor3d.html)
+python scripts/p21_fig3d_perspectiva.py # perspectiva 3D por algoritmo del pintor
+"C:\Program Files\QGIS 3.44.13\bin\python-qgis-ltr.bat" scripts\p19_proyecto_qgis.py  # proyecto QGIS 3D
 ```
+
+Los guiones `p17` y `p19` requieren QGIS 3.44 instalado (`qgis_process` y el Python de QGIS); el resto solo
+NumPy, rasterio, matplotlib y python-docx.
 
 El manuscrito **no contiene ninguna cifra escrita a mano**: `p08_manuscript.py` las lee de los JSON, y
 `p12_auditoria.py` comprueba que ningún valor citado en el texto carezca de respaldo en los resultados.
@@ -129,9 +161,18 @@ indicativa, no concluyente**, y así se declara en el artículo.
 
 ## Estado
 
-Análisis cerrado y auditado: 34 comprobaciones de formato, figuras, coherencia numérica y aparato
-crítico, sin fallos (`results/auditoria.json`). Manuscrito preparado para su envío a *Virtual
-Archaeology Review*.
+Análisis cerrado y auditado: 63 comprobaciones de formato, figuras, coherencia numérica, aparato crítico y
+plantilla, sin fallos (`results/auditoria.json`).
+
+El manuscrito enviado a *Virtual Archaeology Review* el 30/08/2026 (ID 27046) fue devuelto sin revisión el
+2/09/2026 por falta de profundidad, bibliografía escasa y encaje con la arqueología virtual. La versión del
+26/09/2026 responde a las tres objeciones: sección de antecedentes en cinco apartados con 56 referencias
+verificadas en Crossref, 7 252 palabras de cuerpo, validación cruzada frente a `gdal_viewshed`, y el paisaje
+visual de la torre más alta en planta, en perspectiva 3D y como visor interactivo. Se reenvía como envío nuevo;
+la carta de presentación lo declara.
+
+**Antes de reenviar:** publicar una nueva versión del depósito Zenodo (v1.2.0) con el visor, el proyecto QGIS,
+los guiones `p15`–`p21` y las figuras nuevas, porque el manuscrito afirma que están depositados.
 
 ## Licencia y cita
 

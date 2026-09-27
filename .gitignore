@@ -22,3 +22,6 @@ VAR_CoverLetter_cumplimentado.docx
 scripts/p15_cover_letter.py
 datos_para_ojs.txt
 ENVIO_VAR/
+
+# ficheros auxiliares de GDAL/QGIS
+*.aux.xml

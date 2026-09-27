@@ -28,6 +28,7 @@ import json
 import os
 import re
 import sys
+sys.stdout.reconfigure(encoding="utf-8")
 
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -117,14 +118,19 @@ def main():
     check("formato", "marcador decimal con punto", not comas,
           "" if not comas else "%d comas decimales: %s" % (len(comas), sorted(set(comas))[:6]))
 
-    nombres = ["Mamani", "Alanoca", "Duany", "Vicente A", "Altiplano"]
+    # «Altiplano» a secas no sirve: aparece en titulos ajenos («The Altiplano
+    # period»); lo que delata es el nombre de la universidad o su dominio.
+    nombres = ["Mamani Calisaya", "Alanoca", "Duany", "Vicente A", "Universidad Nacional del Altiplano",
+               "unap.edu"]
     hay = [x for x in nombres if x in texto]
     check("formato", "fichero anónimo", not hay, "aparece: %s" % hay if hay else "")
 
     # ---------------------------------------------------------------- figuras
     print("\n2. FIGURAS")
     from PIL import Image
-    esperadas = ["fig_mapa.png", "fig_perfiles.png", "fig_nulos.png"]
+    esperadas = ["fig_mapa.png", "fig_perfiles.png", "fig_nulos.png",
+                 "fig3d_planta.png", "fig3d_perspectiva.png"]
+    N_FIG = len(esperadas)
     for fn in esperadas:
         p = os.path.join(FIG, fn)
         if not os.path.exists(p):
@@ -135,13 +141,13 @@ def main():
         dpi = im.info.get("dpi", (0, 0))[0]
         check("figuras", "%s: resolución" % fn, dpi >= 299 and im.width >= 1800,
               "%dx%d px, %d dpi" % (im.width, im.height, dpi))
-    check("figuras", "tres figuras incrustadas", len(doc.inline_shapes) == 3,
+    check("figuras", "%d figuras incrustadas" % N_FIG, len(doc.inline_shapes) == N_FIG,
           "%d incrustadas" % len(doc.inline_shapes))
     cuerpo_txt = "\n".join(p for p in ps if not p.strip().startswith("Figura "))
-    for i in (1, 2, 3):
+    for i in range(1, N_FIG + 1):
         check("figuras", "Figura %d citada en el texto" % i, ("figura %d" % i) in cuerpo_txt.lower())
     check("figuras", "pies numerados y presentes",
-          len([p for p in ps if re.match(r"^Figura\s+\d+\.", p.strip())]) == 3)
+          len([p for p in ps if re.match(r"^Figura\s+\d+\.", p.strip())]) == N_FIG)
     check("figuras", "tablas numeradas y presentes",
           len([p for p in ps if re.match(r"^Tabla\s+\d+\.", p.strip())]) == len(doc.tables),
           "%d pies, %d tablas" % (len([p for p in ps if re.match(r"^Tabla\s+\d+\.", p.strip())]),
@@ -184,6 +190,30 @@ def main():
         f5 = FUN["por_alcance"]["5000"]
         check("contenido", "p de la subred funeraria", ("%.3f" % f5["p_unilateral"]) in texto,
               "%.3f" % f5["p_unilateral"])
+
+    # La ruta 3D: validacion cruzada frente a gdal_viewshed y cuenca de la torre.
+    def mil(n):
+        return "{:,}".format(int(n)).replace(",", " ")
+
+    CRUZ, TORRE = cargar("viewshed_cruzada.json"), cargar("cuenca_torre.json")
+    if CRUZ:
+        ac = "%.2f %%" % (100 * CRUZ["acuerdo"])
+        check("contenido", "acuerdo de la validación cruzada", ac in texto, ac)
+        check("contenido", "celdas de la validación cruzada", mil(CRUZ["celdas_evaluadas"]) in texto,
+              mil(CRUZ["celdas_evaluadas"]))
+        check("contenido", "celdas visibles según cada motor",
+              mil(CRUZ["visibles_gdal"]) in texto and mil(CRUZ["visibles_nuestro"]) in texto,
+              "%s / %s" % (mil(CRUZ["visibles_gdal"]), mil(CRUZ["visibles_nuestro"])))
+    else:
+        check("contenido", "validación cruzada disponible", False, "falta viewshed_cruzada.json")
+    if TORRE:
+        frase = "%d caen dentro de la cuenca visual" % TORRE["tumbas_visibles"]
+        check("contenido", "tumbas visibles desde la torre", frase in texto,
+              "%d de %d" % (TORRE["tumbas_visibles"], TORRE["tumbas_en_figura"]))
+        check("contenido", "altitud de la torre", mil(round(TORRE["altitud_m"])) in texto,
+              "%s m" % mil(round(TORRE["altitud_m"])))
+    else:
+        check("contenido", "cuenca de la torre disponible", False, "falta cuenca_torre.json")
 
     # cifras escritas a mano que suelen envejecer
     print("\n4. CIFRAS ESCRITAS A MANO")
@@ -323,8 +353,9 @@ def main():
 
     vinetas = [p for p in doc.paragraphs if p.style.name == "List Bullet"]
     largos = [len(p.text) for p in vinetas]
-    check("plantilla", "tres highlights de 190 caracteres como máximo",
-          len(vinetas) == 3 and all(n <= 190 for n in largos),
+    # Las Author Guidelines vigentes fijan 150 caracteres por viñeta, espacios incluidos.
+    check("plantilla", "tres highlights de 150 caracteres como máximo",
+          len(vinetas) == 3 and all(n <= 150 for n in largos),
           "%d viñetas, máximo %d caracteres" % (len(vinetas), max(largos) if largos else 0))
 
     for etiqueta, cab in (("inglés", "Keywords"), ("español", "Palabras clave")):
@@ -348,11 +379,28 @@ def main():
     check("plantilla", "tablas a cuerpo 8", t_tab == {8.0}, "%s" % sorted(t_tab))
 
     # APA 6.a con DOI cuando exista, en la forma «doi:».
-    refs = [p for p in ps_ if re.match(r"^[A-Z][a-zA-Z\-]+,\s+[A-Z]\.", p)]
+    # «Apellido(s), I.»: con tilde, apostrofo o compuesto (Čučković, Dell'Unto,
+    # López-Menchero Bendicho), y solo a partir del encabezado de referencias.
+    i_r = ps_.index("Referencias") if "Referencias" in ps_ else 0
+    refs = [p for p in ps_[i_r + 1:] if re.match(r"^[^\W\d_][\w'’ -]*?,\s+[A-Z]\.", p)]
     con_doi = [r for r in refs if "doi:" in r]
     check("plantilla", "los DOI se escriben con el prefijo «doi:»",
           all(("http" not in r.split("doi:")[-1]) for r in con_doi),
           "%d de %d referencias con DOI" % (len(con_doi), len(refs)))
+
+    # El rechazo de mesa (2/09/2026) pidio mas de 5 000 palabras y una revision
+    # bibliografica extensa; se exige margen sobre ambas cifras.
+    i_ini = next((i for i, t in enumerate(ps_) if t.startswith("1. ")), None)
+    i_ref = ps_.index("Referencias") if "Referencias" in ps_ else None
+    cuerpo_n = 0
+    if i_ini is not None and i_ref is not None:
+        cuerpo_n = sum(len(t.split()) for t in ps_[i_ini:i_ref])
+        cuerpo_n += sum(len(c.text.split()) for t in doc.tables for r in t.rows for c in r.cells)
+    check("plantilla", "cuerpo del artículo de 5 500 palabras como mínimo", cuerpo_n >= 5500,
+          "%d palabras" % cuerpo_n)
+    check("plantilla", "al menos 30 referencias", len(refs) >= 30, "%d" % len(refs))
+    check("plantilla", "sección de antecedentes con cinco apartados",
+          all(("2.%d. " % k) in texto for k in range(1, 6)))
 
     # Marcadores de posicion: lo que se escribe «para rellenar luego» es
     # exactamente lo que acaba enviandose sin rellenar.

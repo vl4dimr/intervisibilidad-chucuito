@@ -160,7 +160,7 @@ def main():
     ax.set_axis_off()
     leg = [Line2D([0], [0], marker="^", color="w", markerfacecolor=OBS_C, markersize=12,
                   label="Torre observadora (%s, %s m)"
-                        % (" ".join(obs["nombre"].split()), "{:,}".format(round(obs["altitud"])).replace(",", "202f"))),
+                        % (" ".join(obs["nombre"].split()), "{:,}".format(round(obs["altitud"])).replace(",", " "))),
            Line2D([0], [0], marker="o", color="w", markerfacecolor=VIS, markersize=9,
                   label="Sitio funerario dentro de la cuenca visual (%d)" % n_vis),
            Line2D([0], [0], marker="o", color="w", markerfacecolor=OCULTO, markersize=8,

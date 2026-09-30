@@ -125,6 +125,12 @@ def main():
     hay = [x for x in nombres if x in texto]
     check("formato", "fichero anónimo", not hay, "aparece: %s" % hay if hay else "")
 
+    # El deposito identifica a los autores (su pagina muestra los nombres): ni
+    # el DOI ni el repositorio pueden aparecer mientras dure la revision ciega.
+    deposito = [x for x in ("zenodo", "10.5281", "github", "vl4dimr") if x in texto.lower()]
+    check("formato", "sin identificador del depósito ni repositorio", not deposito,
+          "aparece: %s" % deposito if deposito else "")
+
     # ---------------------------------------------------------------- figuras
     print("\n2. FIGURAS")
     from PIL import Image

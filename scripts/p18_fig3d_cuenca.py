@@ -180,11 +180,12 @@ def figura_planta():
 
     from matplotlib.lines import Line2D
     leg = [Line2D([0], [0], marker="^", color="w", markerfacecolor=OBS_C, markersize=13,
-                  label="Observing tower (4145 m)"),
+                  label="Torre observadora (%s m)"
+                        % "{:,}".format(round(obs["altitud"])).replace(",", " ")),
            Line2D([0], [0], marker="o", color="w", markerfacecolor=VIS, markersize=9,
-                  label="Tomb within the viewshed (%d)" % n_vis),
+                  label="Tumba dentro de la cuenca visual (%d)" % n_vis),
            Line2D([0], [0], marker="o", color="w", markerfacecolor=OCULTO, markersize=8,
-                  label="Tomb hidden from the tower (%d)" % n_oc)]
+                  label="Tumba oculta a la torre (%d)" % n_oc)]
     ax.legend(handles=leg, loc="upper right", frameon=True, framealpha=0.9,
               fontsize=8.5, edgecolor="#c7cdd6")
     # barra de escala
@@ -192,8 +193,8 @@ def figura_planta():
     ax.text(3.5, 1.35, "5 km", ha="center", fontsize=8.5)
     ax.set_xlim(ext[0], ext[1]); ax.set_ylim(ext[2], ext[3])
     ax.set_xticks([]); ax.set_yticks([])
-    ax.set_title("Viewshed from the highest funerary tower, Juli — only %d of %d "
-                 "tombs within reach are visible" % (n_vis, n_vis + n_oc),
+    ax.set_title("Cuenca visual desde la torre funeraria más alta (Juli): %d de %d "
+                 "tumbas al alcance son visibles" % (n_vis, n_vis + n_oc),
                  fontsize=9.5, loc="left", color="#111827")
     fig.tight_layout(pad=0.6)
     out = os.path.join(FIG, "fig3d_planta.png")

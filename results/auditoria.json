@@ -1,5 +1,5 @@
 {
-  "ok": 63,
+  "ok": 64,
   "fallos": 0,
   "items": [
     {
@@ -24,7 +24,7 @@
       "bloque": "formato",
       "check": "cuerpo a dos columnas",
       "ok": true,
-      "detalle": "secciones: 18"
+      "detalle": "secciones: 19"
     },
     {
       "bloque": "formato",
@@ -47,6 +47,12 @@
     {
       "bloque": "formato",
       "check": "fichero anónimo",
+      "ok": true,
+      "detalle": ""
+    },
+    {
+      "bloque": "formato",
+      "check": "sin identificador del depósito ni repositorio",
       "ok": true,
       "detalle": ""
     },
@@ -288,7 +294,7 @@
       "bloque": "plantilla",
       "check": "extended abstract en inglés, de 600 a 900 palabras",
       "ok": true,
-      "detalle": "886 palabras"
+      "detalle": "892 palabras"
     },
     {
       "bloque": "plantilla",
@@ -336,7 +342,7 @@
       "bloque": "plantilla",
       "check": "cuerpo del artículo de 5 500 palabras como mínimo",
       "ok": true,
-      "detalle": "7252 palabras"
+      "detalle": "7291 palabras"
     },
     {
       "bloque": "plantilla",

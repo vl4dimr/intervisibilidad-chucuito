@@ -31,8 +31,8 @@ import docmeta
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# DOI de concepto del deposito en Zenodo: apunta siempre a la ultima version.
-DOI_CONCEPTO = "10.5281/zenodo.22176260"
+# El identificador del deposito NO aparece en el manuscrito: su pagina muestra
+# los nombres de los autores y romperia la revision ciega. Va en la carta (p15).
 RES = os.path.join(BASE, "results")
 FIG = os.path.join(RES, "figuras")
 OUT = os.path.join(BASE, "VAR_intervisibilidad.docx")
@@ -189,6 +189,11 @@ z_agua = SINMASK["por_alcance"]["5000"]["z"] if SINMASK else float("nan")
 z_n300 = N300["por_alcance"]["5000"]["z"] if N300 else float("nan")
 z_alt = sorted(v["z"] for v in ALT["por_altura"].values()) if ALT else [r5["z"], r5["z"]]
 z_uni = ([NUL["nulos"]["uniforme"][a]["z"] for a in ("5000", "26000")] if NUL else [0, 0])
+# Razon z_uniforme / z_rigido por alcance: cuanto exagera el muestreo aleatorio
+# simple frente al nulo que controla la disposicion. Se usa en la introduccion,
+# el extended abstract y la discusion, por eso se calcula aqui.
+RAZ = (sorted(NUL["nulos"]["uniforme"][a]["z"] / RIG["por_alcance"][a]["z"]
+              for a in RIG["por_alcance"]) if NUL else [float("nan"), float("nan")])
 z_rig_medio = sum(v["z"] for v in RIG["por_alcance"].values()) / len(RIG["por_alcance"])
 alt_obs = ALT["por_altura"] if ALT else None
 var_alt = (100 * (alt_obs["12.0"]["observado"] - alt_obs["0.0"]["observado"])
@@ -341,10 +346,11 @@ for _par in [
     "Pomata, whose centroids lie %.1f km apart. Restricted to Juli, the only group large enough to "
     "test, the contrast falls to the margin of conventional significance (p = %s). The evidence is "
     "indicative, not conclusive. What does survive without qualification is the comparison between "
-    "null models: simple random sampling attributes to placement an effect several times larger than "
-    "the one that withstands a test controlling for the arrangement of the set."
+    "null models: simple random sampling attributes to placement an effect between %.1f and %.1f "
+    "times larger, depending on range, than the one that withstands a test controlling for the "
+    "arrangement of the set."
     % (n_sitios, r5["z"], f(r5["p_unilateral"], 3),
-       DIS["separacion_centroides_km"] if DIS else 0.0, p_juli),
+       DIS["separacion_centroides_km"] if DIS else 0.0, p_juli, RAZ[0], RAZ[-1]),
 
     "Three artefacts encountered during the analysis —the sign of the curvature correction, the "
     "constant elevation assigned to water, and the orientation bias of a tightly fitted raster "
@@ -398,20 +404,20 @@ P("Este trabajo retoma la cuestión en la provincia de Chucuito, en la ribera pe
   "primero equivale al muestreo aleatorio empleado hasta ahora; y el motor de cálculo se valida antes "
   "de tocar el terreno real, tanto sobre terrenos sintéticos de respuesta conocida como frente a una "
   "implementación de referencia de uso general.")
-P("El resultado sostiene la conclusión previa pero rebaja su magnitud en un orden de magnitud, y esa es "
-  "la primera contribución. La segunda es la documentación de tres artefactos hallados durante el "
+P("El resultado sostiene la conclusión previa, pero reduce su magnitud: el muestreo aleatorio simple "
+  "la exagera entre %.1f y %.1f veces según el alcance, y esa es la primera contribución. La segunda es la documentación de tres artefactos hallados durante el "
   "análisis que, sin corregir, invierten o anulan el resultado sin dejar rastro visible. La tercera es "
   "de arqueología virtual: el paisaje visual de la torre funeraria más alta del corpus se hace "
   "explorable en planta, en una perspectiva tridimensional generada por código y en un visor web "
   "interactivo, todos depositados junto con los datos y el código que los producen, de modo que la "
-  "visualización hereda la misma verificabilidad que el análisis estadístico.")
+  "visualización hereda la misma verificabilidad que el análisis estadístico." % (RAZ[0], RAZ[-1]))
 P("El artículo se organiza como sigue. El apartado 2 sitúa el trabajo en cinco líneas de "
   "bibliografía: el análisis de visibilidad en arqueología del paisaje, las redes de visibilidad y los "
   "modelos nulos, la incertidumbre del propio cálculo, los SIG tridimensionales y la arqueología "
   "virtual, y el paisaje funerario de la cuenca. El apartado 3 describe los datos, el motor de línea "
   "de visión, sus dos validaciones, los modelos nulos y los instrumentos de visualización. El apartado "
   "4 presenta los resultados, incluidos los tres artefactos y la cuenca visual de la torre. El "
-  "apartado 5 los discute y el 6 indica dónde está depositado todo el material.")
+  "apartado 5 los discute y el 6 describe cómo se ha depositado todo el material.")
 
 # ================================================================= antecedentes
 h1("2. Antecedentes")
@@ -837,13 +843,8 @@ figure("fig3d_planta.png", "Figura 4.",
        % (torre_nombre, CRUZ["parametros"]["alcance_m"] / 1000 if CRUZ else 10,
           TORRE["tumbas_en_figura"] if TORRE else 0),
        width_mm=120)
-figure("fig3d_perspectiva.png", "Figura 5.",
-       "La misma cuenca visual en perspectiva tridimensional, vista desde el noreste con exageración "
-       "vertical de 2.5, generada por código con un algoritmo del pintor que respeta la oclusión: un "
-       "sitio solo queda tapado cuando hay relieve entre él y el punto de vista. La torre observadora "
-       "se marca con un triángulo y las tumbas ocultas con círculos grises; el lago ocupa la esquina "
-       "inferior derecha. La escena es la misma que muestra el visor web interactivo depositado.")
-
+# La Tabla 3 va antes de la Figura 5: la perspectiva no cabe bajo la Figura 4 y,
+# en su orden natural, dejaba un cuarto de pagina en blanco.
 if CRUZ:
     table("Tabla 3.", "Validación cruzada de la cuenca visual desde la torre: motor propio frente a "
           "gdal_viewshed sobre el mismo ráster UTM de 30 m, con parámetros idénticos.",
@@ -856,6 +857,13 @@ if CRUZ:
                                                  mil(round(CRUZ["dist_media_total_m"])))]],
           widths=[24, 22, 22, 18, 16, 16, 52])
 
+figure("fig3d_perspectiva.png", "Figura 5.",
+       "La misma cuenca visual en perspectiva tridimensional, vista desde el noreste con exageración "
+       "vertical de 2.5, generada por código con un algoritmo del pintor que respeta la oclusión: un "
+       "sitio solo queda tapado cuando hay relieve entre él y el punto de vista. La torre observadora "
+       "se marca con un triángulo y las tumbas ocultas con círculos grises; el lago ocupa la esquina "
+       "inferior derecha. La escena es la misma que muestra el visor web interactivo depositado.")
+
 # ==================================================== discusion y conclusiones
 h1("5. Discusión y conclusiones")
 h2("5.1. Qué sostiene el resultado y qué no")
@@ -866,8 +874,6 @@ P("Los sitios de Chucuito ocupan posiciones desde las que se ven entre sí más 
   "significación convencional. La evidencia es indicativa, no concluyente, y así debe leerse."
   % n_sitios)
 if NUL:
-    _raz = sorted(NUL["nulos"]["uniforme"][a]["z"] / RIG["por_alcance"][a]["z"]
-                  for a in RIG["por_alcance"])
     P("Lo que sí resiste sin matices es la comparación entre modelos nulos: el muestreo aleatorio "
       "simple atribuye al emplazamiento un efecto entre %.1f y %.1f veces mayor, según el alcance, que "
       "el que sobrevive a un contraste capaz de controlar la disposición del conjunto. La distancia "
@@ -875,7 +881,7 @@ if NUL:
       "región y penaliza tanto más su intervisibilidad cuanto más lejos se mira. Es la advertencia de "
       "Wheatley y Gillings (2000) y de Lake y Woodman (2003) convertida en una cifra: el modelo nulo "
       "no es un detalle técnico, es la mitad del resultado."
-      % (_raz[0], _raz[-1]))
+      % (RAZ[0], RAZ[-1]))
 P("Conviene ser preciso sobre qué autoriza a concluir eso. El resultado dice que el emplazamiento "
   "favorece la visibilidad recíproca; no dice que la visibilidad fuera el criterio de emplazamiento. "
   "Otras razones —acceso al agua, suelos, rutas, defensa— pueden producir el mismo patrón si "
@@ -894,9 +900,9 @@ P("Esa comparación admite lectura frente al antecedente. Bongers et al. (2012) 
   "eleva todavía más, lo que indica que la cota por sí sola no explica el patrón. Pero el nulo rígido, "
   "que conserva la configuración y solo cambia su emplazamiento, los reduce a valores en torno a "
   "%+.1f. La conclusión previa se sostiene, y este trabajo la corrobora en otra zona de la cuenca y "
-  "con otra medida; pero la magnitud que sugiere el muestreo aleatorio simple es aproximadamente un "
-  "orden de magnitud mayor que la que resiste un contraste capaz de controlar la disposición del "
-  "conjunto." % (z_uni[0], z_uni[1], z_rig_medio))
+  "con otra medida; pero la magnitud que sugiere el muestreo aleatorio simple excede, en la "
+  "proporción ya indicada (de %.1f a %.1f veces), la que resiste un contraste capaz de controlar la "
+  "disposición del conjunto." % (z_uni[0], z_uni[1], z_rig_medio, RAZ[0], RAZ[-1]))
 P("El resultado de la torre más alta añade un matiz que la estadística agregada no muestra. Que "
   "ninguna otra tumba sea visible desde la posición funeraria más dominante del corpus es compatible "
   "con la lectura de Hyslop (1977) de las chullpas como mojones —un mojón se ve desde el territorio que "
@@ -977,11 +983,13 @@ P("El paso más útil sería incorporar cronología: con los sitios fechados, la
 h1("6. Disponibilidad de datos y código")
 P("El código que reconstruye el análisis completo, los datos derivados, los ficheros de resultados, "
   "las figuras, el visor web interactivo y el proyecto de QGIS están depositados con identificador "
-  "persistente, bajo licencia MIT: https://doi.org/%s. El modelo de elevación es Copernicus DEM "
+  "persistente, bajo licencia MIT. El identificador se omite durante la revisión para preservar el "
+  "anonimato: se facilita al editor en la carta de presentación y se incorporará en la versión final. "
+  "El modelo de elevación es Copernicus DEM "
   "GLO-30, de uso libre con atribución; la capa de sitios se cita según su procedencia declarada, con "
   "la reserva expuesta en el apartado 3.1. El manuscrito se genera desde los ficheros de resultados, "
   "de modo que ninguna cifra del texto está escrita a mano, y una auditoría automática comprueba que "
-  "cada valor citado tenga respaldo en ellos." % DOI_CONCEPTO)
+  "cada valor citado tenga respaldo en ellos.")
 P("El depósito incluye las ejecuciones previas a la corrección de dos de los tres artefactos descritos "
   "—el nulo rígido calculado sin enmascarar el lago y el calculado sobre el recorte ajustado—, de modo "
   "que las comparaciones del apartado 4 puedan verificarse y no haya que tomarlas por buenas. El "
@@ -1148,6 +1156,9 @@ for _ref in REFERENCIAS:
     _p = P(_ref, 9, after=4)
     _p.paragraph_format.left_indent = Cm(0.6)
     _p.paragraph_format.first_line_indent = Cm(-0.6)
+# Un salto de seccion continuo al final hace que Word equilibre las dos columnas
+# de la ultima pagina; sin el, las referencias ocupan solo la columna izquierda.
+one_col()
 
 doc.save(OUT)
 

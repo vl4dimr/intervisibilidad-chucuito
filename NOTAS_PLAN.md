@@ -48,4 +48,4 @@ PENDIENTE (usuario):
    figuras nuevas. El manuscrito dice que están depositados: hacerlo ANTES de enviar.
 2. Enviar a VAR como envío nuevo: `VAR_intervisibilidad.docx` (anónimo) +
    `VAR_CoverLetter_cumplimentado.docx`. Firma y cuatro autores como en la carta.
-3. Sigue pendiente verificar la procedencia de la capa del INC con el Ministerio (limitación 5.4).
+3. Procedencia: contrastada con el catálogo oficial del Ministerio (p24, 1/10/2026).

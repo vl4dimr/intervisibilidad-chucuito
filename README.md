@@ -20,7 +20,7 @@ densidad que puntos colocados sin esa intención no reproducen. La pregunta no e
 **Advertencia de procedencia.** La capa de sitios se sirve desde Google Drive sin licencia declarada,
 sin fecha de corte y sin criterio de inclusión documentado. El dato es de origen público —del INC— pero
 el redistribuidor no documenta nada de eso. Cualquier resultado hereda esa opacidad y así se declara en
-el artículo. Antes de publicar conviene verificarlo con el Ministerio.
+el artículo y se contrasta con el catálogo oficial del Ministerio (véase más abajo).
 
 **Contraste con el catálogo oficial** (`scripts/p24_contraste_mincul.py`, consulta del 1/10/2026). El
 GeoServer del Ministerio no publica capas de forma anónima, pero el Geoportal (geoportal.cultura.gob.pe) sí

@@ -143,7 +143,7 @@ def main():
 
     log = {
         "sitios_fuente": "INC / Ministerio de Cultura, redistribuido por Geo GPS Peru",
-        "sitios_licencia": "no declarada por el redistribuidor; verificar antes de publicar",
+        "sitios_licencia": "no declarada por el redistribuidor; posiciones contrastadas con el catálogo oficial del Ministerio (p24)",
         "sitios_puno": len(rows),
         "sitios_funerarios": fun,
         "dem_fuente": "Copernicus DEM GLO-30 (ESA), bucket publico de AWS",

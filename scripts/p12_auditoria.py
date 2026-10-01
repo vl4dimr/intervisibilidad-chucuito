@@ -202,6 +202,17 @@ def main():
         return "{:,}".format(int(n)).replace(",", " ")
 
     CRUZ, TORRE = cargar("viewshed_cruzada.json"), cargar("cuenca_torre.json")
+    MINC = cargar("contraste_mincul.json")
+    if MINC:
+        frase = "%d figuran en la capa con el mismo nombre" % MINC["recogidos_en_capa_inc"]
+        check("contenido", "contraste con el catálogo del Ministerio", frase in texto
+              and ("%d de los %d sitios de la capa no constan" % (MINC["sitios_inc_sin_monumento_oficial"],
+                                                                  MINC["sitios_capa_inc"])) in texto,
+              "%d de %d oficiales recogidos" % (MINC["recogidos_en_capa_inc"],
+                                               MINC["monumentos_en_distritos_estudiados"]))
+    else:
+        check("contenido", "contraste con el catálogo del Ministerio", False,
+              "falta contraste_mincul.json")
     if CRUZ:
         ac = "%.2f %%" % (100 * CRUZ["acuerdo"])
         check("contenido", "acuerdo de la validación cruzada", ac in texto, ac)

@@ -60,6 +60,7 @@ SINMASK = cargar("nulo_rigido_sin_mascara.json")   # contraejemplo: agua sin enm
 N300 = cargar("nulo_rigido_n300.json")             # version previa, recorte de 5 km
 CRUZ = cargar("viewshed_cruzada.json")             # nuestro motor frente a gdal_viewshed
 TORRE = cargar("cuenca_torre.json")                # tumbas visibles desde la torre mas alta
+MINC = cargar("contraste_mincul.json")             # contraste con el catalogo del Ministerio
 ORTO = cargar("ortofoto_s2.json")                  # ortoimagen Sentinel-2 de las vistas 3D
 R3D = cargar("render3d.json")                      # camara y parametros del render 3D
 with open(os.path.join(BASE, "data", "terreno_log.json"), encoding="utf-8") as f:
@@ -70,6 +71,13 @@ with open(os.path.join(BASE, "data", "fetch_log.json"), encoding="utf-8") as f:
 
 def f(x, d=4):
     return ("%%.%df" % d) % x
+
+
+def fecha_es(iso):
+    a, m, d = iso.split("-")
+    meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto",
+             "septiembre", "octubre", "noviembre", "diciembre"]
+    return "%d de %s de %s" % (int(d), meses[int(m) - 1], a)
 
 
 def mil(n):
@@ -570,10 +578,30 @@ P("Se analiza la provincia de Chucuito, departamento de Puno, que en el siglo XV
 P("La capa de sitios plantea un problema de procedencia que debe declararse. Se distribuye a través de "
   "un portal que la sirve desde un servicio de alojamiento genérico, sin licencia declarada, sin fecha "
   "de corte y sin criterio de inclusión documentado. El dato es de origen público, pero esa opacidad la "
-  "hereda cualquier resultado. Se intentaron tres vías oficiales sin éxito: el geoservicio del "
-  "Ministerio responde pero no publica ninguna capa de forma anónima; el sistema de información "
-  "geográfica de arqueología se apoya en una cuenta personal cuyo contenido no es accesible por "
-  "interfaz de programación; y un tercer repositorio citado habitualmente ya no resuelve.")
+  "hereda cualquier resultado. El geoservicio cartográfico del Ministerio no publica sus capas de "
+  "forma anónima, de modo que la capa no puede sustituirse por la oficial; sí puede contrastarse.")
+P("El Geoportal del Ministerio de Cultura publica sin registro el catálogo de Monumentos Arqueológicos "
+  "Prehispánicos, con el nombre, las coordenadas y una ficha de cada monumento que indica su distrito "
+  "y su clasificación (consulta del %s). El catálogo reúne %s monumentos en todo el país y %d en la "
+  "provincia de Chucuito, %d de ellos en Juli y Pomata, los dos distritos que abarca la capa del "
+  "estudio. De esos %d, %d figuran en la capa con el mismo nombre y a una distancia mediana de %s m "
+  "(máxima de %s m), del orden de una celda del modelo de elevación, que es justamente el "
+  "desplazamiento que examina el análisis de sensibilidad del apartado 4.5. De los %d restantes, %d "
+  "quedan a más de 5 km de cualquier sitio de la capa, fuera del área que esta cubre; %d es una "
+  "entrada repetida del propio catálogo; y %d no figuran en la capa pese a caer dentro de su área "
+  "(%s). A la inversa, %d de los %d sitios de la capa no constan en el catálogo oficial. La capa no "
+  "es, por tanto, el registro de monumentos del Ministerio sino un inventario más amplio: sus "
+  "posiciones resultan fiables allí donde pueden contrastarse, pero su criterio de inclusión sigue "
+  "sin documentar."
+  % (fecha_es(MINC["consulta"]), mil(MINC["monumentos_catalogo_nacional"]), MINC["monumentos_provincia"],
+     MINC["monumentos_en_distritos_estudiados"], MINC["monumentos_en_distritos_estudiados"],
+     MINC["recogidos_en_capa_inc"], f(MINC["distancia_mediana_m"], 0),
+     f(MINC["distancia_maxima_m"], 0), MINC["no_recogidos_en_capa_inc"],
+     MINC["no_recogidos_fuera_de_cobertura"], MINC["no_recogidos_repetidos_en_catalogo"],
+     MINC["no_recogidos_dentro_de_cobertura"],
+     ", ".join({"Camino Prehispanico Pomata": "el camino prehispánico de Pomata"}.get(n, n)
+               for n in MINC["nombres_no_recogidos_dentro"]),
+     MINC["sitios_inc_sin_monumento_oficial"], MINC["sitios_capa_inc"]))
 
 h2("3.2. Cálculo de la línea de visión")
 P("Entre cada par de sitios se muestrea el perfil del terreno a razón de una muestra por celda —la "
@@ -975,10 +1003,13 @@ P("Lo que la perspectiva aporta al argumento, siguiendo a Richards-Rissetto (201
   "para recalcularlo. El cálculo lo hace el motor sobre el ráster completo." % f(r5["densidad_obs"]))
 
 h2("5.4. Limitaciones")
-P("La procedencia de la capa de sitios es la limitación de fondo. Sin criterio de inclusión documentado "
-  "no se sabe qué sitios faltan, y un registro incompleto sesga la red de forma imprevisible. El "
-  "análisis es reproducible, pero su base documental no está verificada; el reconocimiento de Stanish "
-  "et al. (1997) ofrece el término de comparación natural para una verificación futura.")
+P("La procedencia de la capa de sitios es la limitación de fondo. El contraste con el catálogo del "
+  "Ministerio (apartado 3.1) confirma sus posiciones allí donde coinciden, pero no su exhaustividad: "
+  "sin criterio de inclusión documentado no se sabe qué sitios faltan, y el propio contraste muestra "
+  "al menos %d monumentos oficiales dentro del área que la capa no recoge. Un registro incompleto "
+  "sesga la red de forma imprevisible. El reconocimiento de Stanish et al. (1997) en la región "
+  "Juli-Desaguadero ofrece el término de comparación natural para completar esa verificación."
+  % MINC["no_recogidos_dentro_de_cobertura"])
 P("El modelo de elevación describe la superficie, no el terreno: incluye vegetación y edificación, que "
   "en el altiplano son poco relevantes pero no nulas. La resolución de 30 m impone además un límite: "
   "relieves menores que la celda no bloquean nada en el cálculo aunque lo hicieran en la realidad, y es "

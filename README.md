@@ -22,13 +22,16 @@ sin fecha de corte y sin criterio de inclusión documentado. El dato es de orige
 el redistribuidor no documenta nada de eso. Cualquier resultado hereda esa opacidad y así se declara en
 el artículo. Antes de publicar conviene verificarlo con el Ministerio.
 
-Se intentaron además tres vías oficiales, ninguna utilizable:
-
-- **Geoportal del Ministerio de Cultura**: su GeoServer responde, pero publica **cero capas** de forma
-  anónima. Tanto WFS como WMS devuelven el servicio sin ninguna capa; requiere autenticación.
-- **SIGDA**: corre sobre una cuenta personal de ArcGIS Online (`cesarmil1`), y el elemento no es
-  accesible por su interfaz de programación.
-- **ArqueoData**: el dominio no resuelve.
+**Contraste con el catálogo oficial** (`scripts/p24_contraste_mincul.py`, consulta del 1/10/2026). El
+GeoServer del Ministerio no publica capas de forma anónima, pero el Geoportal (geoportal.cultura.gob.pe) sí
+sirve sin registro el catálogo de Monumentos Arqueológicos Prehispánicos (10 493 en el país) y una ficha por
+monumento con distrito y clasificación. En la provincia de Chucuito hay 22, 14 de ellos en Juli y Pomata. De
+esos 14, **7 están en la capa del INC con el mismo nombre, a una distancia mediana de 32 m**; 3 quedan a más de
+5 km de la capa (fuera de su área), 1 es una entrada repetida del catálogo y 3 caen dentro del área sin figurar
+en la capa (Quimsa Amaya, Tisnashuro, el camino prehispánico de Pomata). A la inversa, 173 de los 180 sitios
+de la capa no están en el catálogo oficial: la capa es un inventario más amplio que el registro de
+monumentos, con posiciones fiables donde pueden contrastarse y criterio de inclusión sin documentar. La consulta
+queda guardada en `data/mincul/` y el resumen en `results/contraste_mincul.json`.
 
 ## Método
 

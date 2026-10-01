@@ -1,0 +1,196 @@
+{
+  "consulta": "2026-10-01",
+  "fuente": "Ministerio de Cultura del Perú, Geoportal, catálogo de Monumentos Arqueológicos Prehispánicos (servicios dgpa/json_monumentos y mapa/verInformacionPoligono)",
+  "monumentos_catalogo_nacional": 10493,
+  "monumentos_provincia": 22,
+  "monumentos_por_distrito": {
+    "Juli": 12,
+    "Kelluyo": 2,
+    "Pisacoma": 5,
+    "Pomata": 2,
+    "Zepita": 1
+  },
+  "distritos_estudiados": [
+    "juli",
+    "pomata"
+  ],
+  "monumentos_en_distritos_estudiados": 14,
+  "recogidos_en_capa_inc": 7,
+  "no_recogidos_en_capa_inc": 7,
+  "sitios_capa_inc": 180,
+  "sitios_inc_sin_monumento_oficial": 173,
+  "distancia_mediana_m": 32.3,
+  "distancia_maxima_m": 280.4,
+  "umbral_m": 300.0,
+  "no_recogidos_fuera_de_cobertura": 3,
+  "no_recogidos_repetidos_en_catalogo": 1,
+  "no_recogidos_dentro_de_cobertura": 3,
+  "nombres_no_recogidos_dentro": [
+    "Camino Prehispanico Pomata",
+    "Quimsa Amaya",
+    "Tisnashuro"
+  ],
+  "pares": [
+    {
+      "oficial": "Anko Vique Monticulo",
+      "id_oficial": 9044,
+      "distrito": "Juli",
+      "clasificacion": "Sitio Arqueológico",
+      "inc_mas_cercano": "Anko Vilque  Montículo",
+      "id_inc": 90,
+      "distancia_m": 280.4,
+      "palabras_comunes": [
+        "anko",
+        "monticulo"
+      ]
+    },
+    {
+      "oficial": "Cccamaq Apacheta Monticulo 2",
+      "id_oficial": 9045,
+      "distrito": "Juli",
+      "clasificacion": "Sitio Arqueológico",
+      "inc_mas_cercano": "Ccamaq Apacheta Montículo 2",
+      "id_inc": 151,
+      "distancia_m": 4.5,
+      "palabras_comunes": [
+        "apacheta",
+        "monticulo"
+      ]
+    },
+    {
+      "oficial": "Cerro Pucara",
+      "id_oficial": 850,
+      "distrito": "Juli",
+      "clasificacion": "Sitio Arqueológico",
+      "inc_mas_cercano": "Pucara Juli",
+      "id_inc": 154,
+      "distancia_m": 129.9,
+      "palabras_comunes": [
+        "pucara"
+      ]
+    },
+    {
+      "oficial": "Chullpa Pucara Sullicani 1",
+      "id_oficial": 881,
+      "distrito": "Juli",
+      "clasificacion": "Sitio Arqueológico",
+      "inc_mas_cercano": "Pucara Sullicane Chullpa 1",
+      "id_inc": 156,
+      "distancia_m": 24.1,
+      "palabras_comunes": [
+        "chullpa",
+        "pucara"
+      ]
+    },
+    {
+      "oficial": "Chullpa Pucara Sullicani 2",
+      "id_oficial": 882,
+      "distrito": "Juli",
+      "clasificacion": "Sitio Arqueológico",
+      "inc_mas_cercano": "Pucara Sullicane Chullpa 2",
+      "id_inc": 157,
+      "distancia_m": 17.1,
+      "palabras_comunes": [
+        "chullpa",
+        "pucara"
+      ]
+    },
+    {
+      "oficial": "Chullpa Pucara Sullicani 3",
+      "id_oficial": 883,
+      "distrito": "Juli",
+      "clasificacion": "Sitio Arqueológico",
+      "inc_mas_cercano": "Pucara Sullicane Chullpa 3",
+      "id_inc": 158,
+      "distancia_m": 32.3,
+      "palabras_comunes": [
+        "chullpa",
+        "pucara"
+      ]
+    },
+    {
+      "oficial": "Tococawa",
+      "id_oficial": 10837,
+      "distrito": "Pomata",
+      "clasificacion": "Sitio Arqueológico",
+      "inc_mas_cercano": "Tococawa",
+      "id_inc": 169,
+      "distancia_m": 100.9,
+      "palabras_comunes": [
+        "tococawa"
+      ]
+    }
+  ],
+  "no_recogidos": [
+    {
+      "oficial": "Camino Prehispanico Pomata",
+      "id_oficial": 9042,
+      "distrito": "Pomata",
+      "clasificacion": "Paisaje Arqueológico",
+      "inc_mas_cercano": "Tococawa  Terrazas",
+      "id_inc": 177,
+      "distancia_m": 238.4,
+      "palabras_comunes": []
+    },
+    {
+      "oficial": "Jishq´a Pukara",
+      "id_oficial": 913,
+      "distrito": "Juli",
+      "clasificacion": "Sitio Arqueológico",
+      "inc_mas_cercano": "Tanapaca Pucara",
+      "id_inc": 179,
+      "distancia_m": 17343.4,
+      "palabras_comunes": []
+    },
+    {
+      "oficial": "Pukara Central de Laca Laca",
+      "id_oficial": 888,
+      "distrito": "Juli",
+      "clasificacion": "Sitio Arqueológico",
+      "inc_mas_cercano": "Tanapaca Pucara",
+      "id_inc": 179,
+      "distancia_m": 19272.4,
+      "palabras_comunes": []
+    },
+    {
+      "oficial": "Quimsa Amaya",
+      "id_oficial": 857,
+      "distrito": "Juli",
+      "clasificacion": "Sitio Arqueológico",
+      "inc_mas_cercano": "Pucara Sullicane Chullpa 2",
+      "id_inc": 157,
+      "distancia_m": 558.5,
+      "palabras_comunes": []
+    },
+    {
+      "oficial": "Quimsa Amaya",
+      "id_oficial": 9043,
+      "distrito": "Juli",
+      "clasificacion": "Sitio Arqueológico",
+      "inc_mas_cercano": "Pucara Sullicane Chullpa 2",
+      "id_inc": 157,
+      "distancia_m": 560.1,
+      "palabras_comunes": []
+    },
+    {
+      "oficial": "Tisnashuro",
+      "id_oficial": 9047,
+      "distrito": "Juli",
+      "clasificacion": "Sitio Arqueológico",
+      "inc_mas_cercano": "Pucara Sullicane",
+      "id_inc": 152,
+      "distancia_m": 33.4,
+      "palabras_comunes": []
+    },
+    {
+      "oficial": "Wañaveq´o Pukara",
+      "id_oficial": 880,
+      "distrito": "Juli",
+      "clasificacion": "Sitio Arqueológico",
+      "inc_mas_cercano": "Tanapaca Pucara",
+      "id_inc": 179,
+      "distancia_m": 15413.7,
+      "palabras_comunes": []
+    }
+  ]
+}

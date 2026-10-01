@@ -1,0 +1,248 @@
+{
+ "fuente": "https://geoportal.cultura.gob.pe/mapa/verInformacionPoligono",
+ "consulta": "2026-10-01",
+ "monumentos": [
+  {
+   "id": 1753,
+   "nombre": "Abrigos Pizacoma",
+   "lat": -16.955340272499996,
+   "lon": -69.37671642264473,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Pisacoma",
+   "Nombre": "Abrigos Pizacoma",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 9044,
+   "nombre": "Anko Vique Monticulo",
+   "lat": -16.234515023499995,
+   "lon": -69.43703783544154,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Juli",
+   "Nombre": "Anko Vique Monticulo",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 9042,
+   "nombre": "Camino Prehispanico Pomata",
+   "lat": -16.265145396999998,
+   "lon": -69.30803766680124,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Pomata",
+   "Nombre": "Camino Prehispanico Pomata",
+   "Clasificación": "Paisaje Arqueológico"
+  },
+  {
+   "id": 9045,
+   "nombre": "Cccamaq Apacheta Monticulo 2",
+   "lat": -16.250363146000012,
+   "lon": -69.46886646606998,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Juli",
+   "Nombre": "Cccamaq Apacheta Monticulo 2",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 858,
+   "nombre": "Cerro Patalaka",
+   "lat": -16.702715217499986,
+   "lon": -69.1229281473911,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Kelluyo",
+   "Nombre": "Cerro Patalaka",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 850,
+   "nombre": "Cerro Pucara",
+   "lat": -16.236079762999992,
+   "lon": -69.4705109419303,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Juli",
+   "Nombre": "Cerro Pucara",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 881,
+   "nombre": "Chullpa Pucara Sullicani 1",
+   "lat": -16.246752008999977,
+   "lon": -69.47104408974991,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Juli",
+   "Nombre": "Chullpa Pucara Sullicani 1",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 882,
+   "nombre": "Chullpa Pucara Sullicani 2",
+   "lat": -16.246968412,
+   "lon": -69.47145569454626,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Juli",
+   "Nombre": "Chullpa Pucara Sullicani 2",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 883,
+   "nombre": "Chullpa Pucara Sullicani 3",
+   "lat": -16.247122414499984,
+   "lon": -69.4708775986238,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Juli",
+   "Nombre": "Chullpa Pucara Sullicani 3",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 10862,
+   "nombre": "Chullpas de Cala Cala",
+   "lat": -16.895280622,
+   "lon": -69.37370382103956,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Pisacoma",
+   "Nombre": "Chullpas de Cala Cala",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 804,
+   "nombre": "Cueva de Tiwintu",
+   "lat": -16.752166004000003,
+   "lon": -69.28137714566628,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Kelluyo",
+   "Nombre": "Cueva de Tiwintu",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 6957,
+   "nombre": "Humacata Sector 1",
+   "lat": -16.80938672900001,
+   "lon": -69.38241858185506,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Pisacoma",
+   "Nombre": "Humacata Sector 1",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 6956,
+   "nombre": "Humacata Sector 2",
+   "lat": -16.810456975000022,
+   "lon": -69.38280754333911,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Pisacoma",
+   "Nombre": "Humacata Sector 2",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 913,
+   "nombre": "Jishq´a Pukara",
+   "lat": -16.452462819999994,
+   "lon": -69.45276658455887,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Juli",
+   "Nombre": "Jishq´a Pukara",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 10882,
+   "nombre": "Pinturas Rupestres Cerro Kampa Chambalaya",
+   "lat": -16.842255418999997,
+   "lon": -69.40261085520754,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Pisacoma",
+   "Nombre": "Pinturas Rupestres Cerro Kampa Chambalaya",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 888,
+   "nombre": "Pukara Central de Laca Laca",
+   "lat": -16.474055218499984,
+   "lon": -69.44745685812347,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Juli",
+   "Nombre": "Pukara Central de Laca Laca",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 857,
+   "nombre": "Quimsa Amaya",
+   "lat": -16.248854385000016,
+   "lon": -69.47623584675364,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Juli",
+   "Nombre": "Quimsa Amaya",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 9043,
+   "nombre": "Quimsa Amaya",
+   "lat": -16.24901885,
+   "lon": -69.47617272942864,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Juli",
+   "Nombre": "Quimsa Amaya",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 8783,
+   "nombre": "Tanka Tanka",
+   "lat": -16.587841453499976,
+   "lon": -69.25251509169347,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Zepita",
+   "Nombre": "Tanka Tanka",
+   "Clasificación": "Zona Arqueológica Monumental"
+  },
+  {
+   "id": 9047,
+   "nombre": "Tisnashuro",
+   "lat": -16.250641852,
+   "lon": -69.47098103112145,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Juli",
+   "Nombre": "Tisnashuro",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 10837,
+   "nombre": "Tococawa",
+   "lat": -16.261759512999987,
+   "lon": -69.30966405685284,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Pomata",
+   "Nombre": "Tococawa",
+   "Clasificación": "Sitio Arqueológico"
+  },
+  {
+   "id": 880,
+   "nombre": "Wañaveq´o Pukara",
+   "lat": -16.451141045000014,
+   "lon": -69.40096593541244,
+   "Región": "Puno",
+   "Provincia": "Chucuito",
+   "Distrito": "Juli",
+   "Nombre": "Wañaveq´o Pukara",
+   "Clasificación": "Sitio Arqueológico"
+  }
+ ]
+}

@@ -1,5 +1,5 @@
 {
-  "ok": 64,
+  "ok": 65,
   "fallos": 0,
   "items": [
     {
@@ -36,7 +36,7 @@
       "bloque": "formato",
       "check": "texto justificado",
       "ok": true,
-      "detalle": "95 de 95"
+      "detalle": "96 de 96"
     },
     {
       "bloque": "formato",
@@ -196,6 +196,12 @@
     },
     {
       "bloque": "contenido",
+      "check": "contraste con el catálogo del Ministerio",
+      "ok": true,
+      "detalle": "7 de 14 oficiales recogidos"
+    },
+    {
+      "bloque": "contenido",
       "check": "acuerdo de la validación cruzada",
       "ok": true,
       "detalle": "99.92 %"
@@ -342,7 +348,7 @@
       "bloque": "plantilla",
       "check": "cuerpo del artículo de 5 500 palabras como mínimo",
       "ok": true,
-      "detalle": "7560 palabras"
+      "detalle": "7787 palabras"
     },
     {
       "bloque": "plantilla",

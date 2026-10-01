@@ -1,0 +1,40 @@
+{
+  "fuente": "Copernicus Sentinel-2 L2A (ESA), via Earth Search STAC (Element 84)",
+  "stac": "https://earth-search.aws.element84.com/v1",
+  "criterio": "pasada de estacion seca (mayo-agosto) mas despejada de la temporada mas reciente, nubosidad < 5 % en todas las granulas",
+  "escenas": [
+    {
+      "id": "S2B_19KDB_20250803_0_L2A",
+      "granula": "MGRS-19KDB",
+      "fecha_hora_utc": "2025-08-03T14:57:35.620000+00:00",
+      "nubosidad_pct": 0.0006,
+      "sol_azimut": 38.78,
+      "sol_elevacion": 47.01,
+      "linea_base": "05.11"
+    },
+    {
+      "id": "S2B_19LDC_20250803_0_L2A",
+      "granula": "MGRS-19LDC",
+      "fecha_hora_utc": "2025-08-03T14:57:20.978000+00:00",
+      "nubosidad_pct": 0.0003,
+      "sol_azimut": 39.46,
+      "sol_elevacion": 47.68,
+      "linea_base": "05.11"
+    }
+  ],
+  "fecha": "2025-08-03",
+  "anio": 2025,
+  "nubosidad_max_pct": 0.0006,
+  "sol_azimut": 39.12,
+  "sol_elevacion": 47.35,
+  "bandas": "B04, B03, B02 (10 m), reflectancia de superficie",
+  "malla": "EPSG:32719, 10 m, alineada con data/terreno_utm.tif (2400 x 2400), 24 km alrededor de la torre",
+  "ajuste_color": {
+    "recorte_bajo": -0.0974,
+    "recorte_alto": 0.087,
+    "gamma": 1.9,
+    "saturacion": 1.18
+  },
+  "atribucion": "Contains modified Copernicus Sentinel data 2025",
+  "atribucion_es": "Contiene datos modificados de Copernicus Sentinel 2025"
+}

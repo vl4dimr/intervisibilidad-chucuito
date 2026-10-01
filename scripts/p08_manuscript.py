@@ -60,6 +60,8 @@ SINMASK = cargar("nulo_rigido_sin_mascara.json")   # contraejemplo: agua sin enm
 N300 = cargar("nulo_rigido_n300.json")             # version previa, recorte de 5 km
 CRUZ = cargar("viewshed_cruzada.json")             # nuestro motor frente a gdal_viewshed
 TORRE = cargar("cuenca_torre.json")                # tumbas visibles desde la torre mas alta
+ORTO = cargar("ortofoto_s2.json")                  # ortoimagen Sentinel-2 de las vistas 3D
+R3D = cargar("render3d.json")                      # camara y parametros del render 3D
 with open(os.path.join(BASE, "data", "terreno_log.json"), encoding="utf-8") as f:
     TER = json.load(f)
 with open(os.path.join(BASE, "data", "fetch_log.json"), encoding="utf-8") as f:
@@ -360,16 +362,18 @@ for _par in [
     "trust." % (z_agua, r5["z"]),
 
     "Finally, the visual landscape is made explorable. The viewshed of the highest funerary tower in "
-    "the corpus (%s, %s m) is rendered in plan, in a code-generated 3D perspective drawn with a "
-    "painter's algorithm that respects occlusion, and as a self-contained interactive web viewer "
-    "with orbital navigation; a QGIS project ready for its 3D map view is also built by code. From "
-    "that tower, %d of the %d other funerary sites within 10 km are visible, which illustrates in one "
-    "image why the funerary subnetwork is no more connected than the rest of the corpus. In the "
+    "the corpus (%s, %s m) is rendered on a dry-season Sentinel-2 orthoimage in plan, in a "
+    "GPU-rendered 3D perspective with the sun placed where it stood at the satellite overpass and "
+    "aerial perspective computed from depth, and as a self-contained interactive web viewer; a "
+    "QGIS project ready for its 3D map view is also built by code. From that tower, %d of the %d "
+    "other funerary sites within 10 km are visible, and only %d of %d non-funerary sites: the "
+    "highest tomb is visually secluded rather than prominent. In the "
     "spirit of the Seville Principles (López-Menchero & Grande, 2011) and of paradata (Bentkowska-"
     "Kafel, Denard, & Baker, 2012), every view is generated from deposited code and data, so the "
     "visualisation is as reproducible and as auditable as the statistics it illustrates."
     % (torre_nombre, mil(round(torre_alt)),
-       TORRE["tumbas_visibles"] if TORRE else 0, TORRE["tumbas_en_figura"] if TORRE else 0),
+       TORRE["tumbas_visibles"], TORRE["tumbas_en_figura"],
+       TORRE["no_funerarios_visibles"], TORRE["no_funerarios_a_10km"]),
 ]:
     P(_par, after=4)
 doc.add_paragraph()
@@ -557,8 +561,12 @@ P("Se analiza la provincia de Chucuito, departamento de Puno, que en el siglo XV
   "Ministerio de Cultura, que documenta 7 907 puntos en todo el Perú, de los cuales 507 corresponden "
   "a Puno y %d a Chucuito. Las cotas proceden del Copernicus DEM GLO-30 de la Agencia Espacial "
   "Europea, a 30 m de resolución, obtenido del repositorio público que no exige registro. El área "
-  "analizada abarca %.0f km de este a oeste y sus cotas van de %s a %s m." % (
-      n_sitios, ext_km, mil(round(TER["altitud_min"])), mil(round(TER["altitud_max"]))))
+  "analizada abarca %.0f km de este a oeste y sus cotas van de %s a %s m. Las vistas del paisaje "
+  "visual (apartado 3.6) se texturizan con una ortoimagen Sentinel-2 L2A del programa Copernicus en "
+  "color natural, a 10 m, tomada el %s en plena estación seca y con una nubosidad inferior al "
+  "%.0f %%; %s." % (
+      n_sitios, ext_km, mil(round(TER["altitud_min"])), mil(round(TER["altitud_max"])),
+      ORTO["fecha"], max(1, round(ORTO["nubosidad_max_pct"] + 0.5)), ORTO["atribucion_es"]))
 P("La capa de sitios plantea un problema de procedencia que debe declararse. Se distribuye a través de "
   "un portal que la sirve desde un servicio de alojamiento genérico, sin licencia declarada, sin fecha "
   "de corte y sin criterio de inclusión documentado. El dato es de origen público, pero esa opacidad la "
@@ -647,18 +655,24 @@ P("Los tres excluyen las masas de agua, por las razones que se exponen en el apa
 
 h2("3.6. Visualización tridimensional del paisaje visual")
 P("La cuenca visual de la torre más alta se presenta en tres formas, todas generadas por código a "
-  "partir de los mismos ficheros. La primera es una planta con sombreado de relieve, la cuenca visual "
-  "y los sitios funerarios dentro del alcance, distinguidos según queden dentro o fuera de ella "
-  "(Figura 4). La segunda es una perspectiva tridimensional (Figura 5) dibujada con un algoritmo del "
-  "pintor: cada celda del modelo y cada marcador se ordenan por su distancia a la cámara y se pintan "
-  "de atrás hacia delante, de modo que un sitio solo queda oculto cuando hay relieve entre él y el "
-  "punto de vista, lo que evita el error habitual de los marcadores que flotan sobre el terreno o "
-  "desaparecen tras él. La tercera es un visor web interactivo autocontenido —un único fichero HTML "
-  "con la malla del relieve, la textura y los sitios incrustados— que permite orbitar, acercarse y "
-  "desplazarse por la escena; se construye a partir del ráster y del resultado del motor, y se "
-  "deposita junto con un proyecto de QGIS preparado para su vista de mapa 3D. La exageración vertical "
-  "se declara en cada vista, en línea con los criterios de transparencia de la arqueología virtual "
-  "(Bentkowska-Kafel et al., 2012; López-Menchero & Grande, 2011).")
+  "partir de los mismos ficheros y con la misma ortoimagen Sentinel-2 como textura, para que el "
+  "lector reconozca el paisaje real y no un mapa de colores convencionales. La primera es una planta "
+  "con la ortoimagen y un sombreado de relieve suave, la cuenca visual y los sitios funerarios dentro "
+  "del alcance, distinguidos según queden dentro o fuera de ella (Figura 4). La segunda es una "
+  "perspectiva tridimensional (Figura 5) renderizada con VTK en la tarjeta gráfica: la malla del "
+  "modelo de elevación a 30 m, con exageración vertical de %.1f, recibe la ortoimagen con la cuenca "
+  "visual drapeada en rojo translúcido; la iluminación coloca el sol en el mismo azimut y elevación "
+  "que tenía en la toma del satélite, de modo que el relieve modelado y las sombras de la fotografía "
+  "no se contradicen; y la perspectiva aérea se calcula con el búfer de profundidad del propio "
+  "render, fundiendo cada píxel con el color de la bruma según su distancia real a la cámara. La "
+  "oclusión de la torre y de las tumbas la resuelve ese mismo búfer, de modo que un marcador solo "
+  "queda oculto cuando hay relieve entre él y el punto de vista. La tercera es un visor web "
+  "interactivo autocontenido —un único fichero HTML con la malla del relieve, la ortoimagen y los "
+  "sitios incrustados— que permite orbitar, acercarse y desplazarse por la escena; se deposita junto "
+  "con un proyecto de QGIS preparado para su vista de mapa 3D. La exageración vertical, la fecha de la "
+  "imagen y su fuente se declaran en cada vista, en línea con los criterios de transparencia de la "
+  "arqueología virtual (Bentkowska-Kafel et al., 2012; López-Menchero & Grande, 2011)."
+  % (R3D["exageracion"] if R3D else 1.8))
 
 # ======================================================================= resultados
 h1("4. Resultados")
@@ -813,9 +827,10 @@ if TORRE and CRUZ:
       "(%s m, distrito de Juli), calculada con observador a %.1f m, objetivo a %.1f m y alcance de "
       "%.0f km. La cuenca es pequeña para una posición tan elevada: %s celdas de 30 m, unos %.1f km², "
       "el %.1f %% del disco evaluado. La torre se asienta en una cumbre rodeada de relieve más alto "
-      "hacia el sur y el este, y su vista se abre en dos lóbulos estrechos —hacia la ladera inmediata "
-      "y hacia el corredor que desciende al lago— que en la perspectiva de la Figura 5 se leen como "
-      "dos franjas rojas sobre el terreno."
+      "hacia el sur y el este, y su vista queda reducida a un lóbulo pegado a la propia cima y a una "
+      "franja alargada en la ladera que se abre al sureste; no alcanza ni una sola celda del lago, "
+      "que queda tapado por las lomas del norte. En la perspectiva de la Figura 5 ambas zonas se "
+      "leen como dos manchas rojas sobre el terreno."
       % (torre_nombre, mil(round(torre_alt)), CRUZ["parametros"]["h_obs"],
          CRUZ["parametros"]["h_tgt"], CRUZ["parametros"]["alcance_m"] / 1000,
          mil(CRUZ["visibles_nuestro"]), area_cuenca_km2, frac_cuenca))
@@ -823,24 +838,29 @@ if TORRE and CRUZ:
       "situados dentro del alcance, %d caen dentro de la cuenca visual. Desde la torre más alta de "
       "Chucuito no se ve ninguna otra torre. Es la versión en una sola imagen del resultado del "
       "apartado 4.7: la subred funeraria no está más conectada que el resto del corpus, y la torre "
-      "mejor situada para dominar el paisaje no domina, en realidad, a sus iguales. Lo que sí domina "
-      "es el corredor de la ribera, que es donde se concentran los sitios no funerarios de Juli; si la "
-      "visibilidad de las chullpas respondía a alguna intención, la evidencia de este caso apunta a "
-      "que era ser vistas desde los lugares habitados y no verse entre sí, una distinción que "
-      "Supernant (2014) y Gillings (2015) han señalado como decisiva y que el análisis de "
-      "intervisibilidad recíproca, por construcción, no puede capturar."
-      % (TORRE["tumbas_en_figura"], TORRE["tumbas_visibles"]))
+      "mejor situada para dominar el paisaje no domina, en realidad, a sus iguales. Tampoco domina "
+      "el poblamiento: de los %d sitios no funerarios registrados a menos de 10 km, solo %d quedan "
+      "dentro de su cuenca. La torre más alta del corpus es, a efectos visuales, un lugar recluido, "
+      "y como la visibilidad entre dos puntos de alturas parecidas es aproximadamente recíproca, "
+      "tampoco se la ve desde los lugares habitados. Este caso no apoya, por tanto, la lectura de "
+      "las chullpas como hitos pensados para ser vistos; encaja mejor con la posibilidad, que "
+      "Gillings (2015) ha reivindicado, de que la ocultación sea tan intencional como la exposición. "
+      "Un solo monumento no permite generalizar, y el análisis de intervisibilidad recíproca no "
+      "distingue por construcción entre ver y ser visto (Supernant, 2014), pero la observación "
+      "señala dónde conviene mirar."
+      % (TORRE["tumbas_en_figura"], TORRE["tumbas_visibles"],
+         TORRE["no_funerarios_a_10km"], TORRE["no_funerarios_visibles"]))
     P("El visor interactivo depositado permite comprobar esa lectura desde cualquier ángulo: orbitar "
       "alrededor de la torre, descender hasta la altura de un observador y verificar que las tumbas "
       "vecinas quedan detrás de las lomas que la Figura 5 muestra. No añade información al cálculo, "
       "pero hace inspeccionable la razón geométrica de cada resultado, que es exactamente lo que una "
       "cifra de densidad no puede hacer.")
 figure("fig3d_planta.png", "Figura 4.",
-       "Cuenca visual en planta desde %s (triángulo), sobre el relieve sombreado del sector de Juli. "
-       "En rojo, las celdas visibles desde la torre con alcance de %.0f km; los círculos son los "
-       "sitios de topónimo funerario dentro del encuadre, en rojo si caen dentro de la cuenca y en "
-       "gris si quedan ocultos. Ninguna de las %d tumbas es visible. El lago se representa en azul."
-       % (torre_nombre, CRUZ["parametros"]["alcance_m"] / 1000 if CRUZ else 10,
+       "Cuenca visual en planta desde %s (triángulo) sobre la ortoimagen Sentinel-2 del %s, con "
+       "sombreado de relieve. En rojo, las celdas visibles desde la torre con alcance de %.0f km; los "
+       "círculos son los sitios de topónimo funerario dentro del encuadre, en rojo si caen dentro de "
+       "la cuenca y en gris si quedan ocultos. Ninguna de las %d tumbas es visible."
+       % (torre_nombre, ORTO["fecha"], CRUZ["parametros"]["alcance_m"] / 1000 if CRUZ else 10,
           TORRE["tumbas_en_figura"] if TORRE else 0),
        width_mm=120)
 # La Tabla 3 va antes de la Figura 5: la perspectiva no cabe bajo la Figura 4 y,
@@ -858,11 +878,13 @@ if CRUZ:
           widths=[24, 22, 22, 18, 16, 16, 52])
 
 figure("fig3d_perspectiva.png", "Figura 5.",
-       "La misma cuenca visual en perspectiva tridimensional, vista desde el noreste con exageración "
-       "vertical de 2.5, generada por código con un algoritmo del pintor que respeta la oclusión: un "
-       "sitio solo queda tapado cuando hay relieve entre él y el punto de vista. La torre observadora "
-       "se marca con un triángulo y las tumbas ocultas con círculos grises; el lago ocupa la esquina "
-       "inferior derecha. La escena es la misma que muestra el visor web interactivo depositado.")
+       "La misma cuenca visual en perspectiva tridimensional, vista desde el lago, al norte-noreste "
+       "de la torre, con exageración vertical de %.1f. Render con VTK sobre la ortoimagen Sentinel-2, "
+       "con el sol en la posición de la toma y perspectiva aérea calculada con la profundidad real "
+       "de cada píxel. La torre observadora es la columna oscura rotulada; las tumbas, las esferas "
+       "sobre mástil, y solo quedan ocultas donde el relieve las tapa desde este punto de vista. La "
+       "escena es la misma que muestra el visor web interactivo depositado."
+       % (R3D["exageracion"] if R3D else 1.8))
 
 # ==================================================== discusion y conclusiones
 h1("5. Discusión y conclusiones")
@@ -903,14 +925,17 @@ P("Esa comparación admite lectura frente al antecedente. Bongers et al. (2012) 
   "con otra medida; pero la magnitud que sugiere el muestreo aleatorio simple excede, en la "
   "proporción ya indicada (de %.1f a %.1f veces), la que resiste un contraste capaz de controlar la "
   "disposición del conjunto." % (z_uni[0], z_uni[1], z_rig_medio, RAZ[0], RAZ[-1]))
-P("El resultado de la torre más alta añade un matiz que la estadística agregada no muestra. Que "
-  "ninguna otra tumba sea visible desde la posición funeraria más dominante del corpus es compatible "
-  "con la lectura de Hyslop (1977) de las chullpas como mojones —un mojón se ve desde el territorio que "
-  "delimita, no desde otros mojones— y con la de Kesseli y Pärssinen (2005) como símbolos de poder "
-  "dirigidos a los vivos. Ambas lecturas predicen visibilidad desde los lugares habitados y no entre "
-  "tumbas, y la torre estudiada ve precisamente el corredor de la ribera donde se concentra la "
-  "ocupación. Distinguir intervisibilidad de intravisibilidad, como propone Supernant (2014), es el "
-  "siguiente paso natural.")
+P("El resultado de la torre más alta añade un matiz que la estadística agregada no muestra. Hyslop "
+  "(1977) leyó las chullpas como mojones —un mojón se ve desde el territorio que delimita, no desde "
+  "otros mojones— y Kesseli y Pärssinen (2005) como símbolos de poder dirigidos a los vivos. Ambas "
+  "lecturas predicen que las torres se vean desde los lugares habitados aunque no se vean entre sí. "
+  "La torre más alta de Chucuito no cumple esa predicción: no ve otras tumbas, pero tampoco ve el "
+  "poblamiento ni el lago, y su cuenca visual se reduce a la propia cima y a una ladera. Es un "
+  "único caso y no refuta ninguna de las dos lecturas, pero obliga a considerar la contraria, la "
+  "de una arquitectura funeraria emplazada para quedar recluida, que Gillings (2015) ha mostrado "
+  "que puede ser tan intencional como la exposición. Distinguir intervisibilidad de visibilidad "
+  "desde los asentamientos, como propone Supernant (2014), y extender el cálculo a todas las torres "
+  "del corpus son los pasos que permitirían decidir entre ambas.")
 
 h2("5.2. Tres artefactos y una validación cruzada")
 P("La segunda contribución es metodológica y probablemente más transferible. Los tres artefactos "

@@ -21,6 +21,7 @@ import rasterio
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import matplotlib.patheffects
 from matplotlib.colors import LightSource, LinearSegmentedColormap
 from rasterio.warp import transform as tcoords
 
@@ -148,17 +149,28 @@ def figura_planta():
     z = dem[f0:f1, c0:c1]; vcrop = vs[f0:f1, c0:c1]
     ext = [0, (c1 - c0) * 30 / 1000, 0, (f1 - f0) * 30 / 1000]
 
-    hips = LinearSegmentedColormap.from_list("h",
-        ["#eef2ea", "#d9dfc9", "#c3b795", "#a8875f", "#8a6a4a", "#7d6a63"])
+    # Fondo: ortoimagen Sentinel-2 de estacion seca (p22) en la misma ventana,
+    # con un sombreado de relieve suave multiplicado para leer la topografia.
+    from rasterio.windows import from_bounds
+    from rasterio.enums import Resampling as Rs
+    x0, y0 = tr.c + c0 * tr.a, tr.f + f0 * tr.e
+    x1, y1 = tr.c + c1 * tr.a, tr.f + f1 * tr.e
+    with rasterio.open(os.path.join(DATA, "ortofoto_s2.tif")) as so:
+        win = from_bounds(x0, y1, x1, y0, transform=so.transform)
+        orto = so.read(window=win, out_shape=(3, 3 * (f1 - f0), 3 * (c1 - c0)),
+                       resampling=Rs.bilinear, boundless=True).transpose(1, 2, 0) / 255.0
     ls = LightSource(azdeg=315, altdeg=45)
-    rgb = ls.shade(z, cmap=hips, blend_mode="soft", vert_exag=6, dx=30, dy=30)
-    rgb[np.abs(z - 3808.5) < 0.05] = (0.788, 0.847, 0.906, 1.0)
+    hs = ls.hillshade(z, vert_exag=3, dx=30, dy=30)
+    hs = np.kron(hs, np.ones((3, 3)))
+    rgb = np.clip(orto * (0.55 + 0.6 * hs[..., None]), 0, 1)
 
     fig, ax = plt.subplots(figsize=(7.2, 7.2))
     ax.imshow(np.flipud(rgb), extent=ext, origin="lower")
     vis_m = np.ma.masked_where(vcrop != 1, np.ones_like(z))
     ax.imshow(np.flipud(vis_m), extent=ext, origin="lower",
-              cmap=matplotlib.colors.ListedColormap([VIS]), alpha=0.42)
+              cmap=matplotlib.colors.ListedColormap([VIS]), alpha=0.5)
+    ax.contour(np.flipud((vcrop == 1).astype(float)), levels=[0.5], extent=ext,
+               origin="lower", colors=[VIS], linewidths=0.9)
 
     rows = list(csv.DictReader(open(os.path.join(DATA, "sitios_chucuito.csv"),
                                     encoding="utf-8-sig")))
@@ -170,7 +182,8 @@ def figura_planta():
         cc, ff = ~tr * (ux[0], uy[0]); cc, ff = int(round(cc)), int(round(ff))
         if not (f0 <= ff < f1 and c0 <= cc < c1):
             continue
-        xk = (cc - c0) * 30 / 1000; yk = (ff - f0) * 30 / 1000
+        # el eje y crece hacia el norte y las filas hacia el sur: hay que invertirlas
+        xk = (cc - c0 + 0.5) * 30 / 1000; yk = (f1 - ff - 0.5) * 30 / 1000
         if int(row["id"]) == int(obs["id"]):
             ax.plot(xk, yk, "^", ms=15, color=OBS_C, mec="white", mew=1.2, zorder=6)
         elif vs[ff, cc] == 1:
@@ -189,8 +202,19 @@ def figura_planta():
     ax.legend(handles=leg, loc="upper right", frameon=True, framealpha=0.9,
               fontsize=8.5, edgecolor="#c7cdd6")
     # barra de escala
+    ax.plot([1, 6], [1, 1], color="white", lw=4.5, solid_capstyle="butt")
     ax.plot([1, 6], [1, 1], color="#111827", lw=2.5, solid_capstyle="butt")
-    ax.text(3.5, 1.35, "5 km", ha="center", fontsize=8.5)
+    ax.text(3.5, 1.35, "5 km", ha="center", fontsize=8.5, color="white",
+            path_effects=[matplotlib.patheffects.withStroke(linewidth=2, foreground="#111827")])
+    # norte
+    ax.annotate("N", xy=(ext[0] + 1.0, ext[3] - 0.8), xytext=(ext[0] + 1.0, ext[3] - 2.4),
+                ha="center", va="center", fontsize=9, fontweight="bold", color="white",
+                arrowprops=dict(arrowstyle="-|>", color="white", lw=1.4),
+                path_effects=[matplotlib.patheffects.withStroke(linewidth=2, foreground="#111827")])
+    meta_o = json.load(open(os.path.join(RES, "ortofoto_s2.json"), encoding="utf-8"))
+    ax.text(ext[1] - 0.3, 0.3, "Imagen: Copernicus Sentinel-2, %s" % meta_o["fecha"],
+            ha="right", va="bottom", fontsize=6.5, color="white",
+            path_effects=[matplotlib.patheffects.withStroke(linewidth=1.5, foreground="#111827")])
     ax.set_xlim(ext[0], ext[1]); ax.set_ylim(ext[2], ext[3])
     ax.set_xticks([]); ax.set_yticks([])
     ax.set_title("Cuenca visual desde la torre funeraria más alta (Juli): %d de %d "
@@ -202,10 +226,27 @@ def figura_planta():
     plt.close(fig)
     # El recuento va a un JSON para que el manuscrito lo lea en lugar de
     # escribirlo a mano: es la misma disciplina que el resto de cifras.
+    # Que mas ve la torre: sitios no funerarios a menos de 10 km dentro de la
+    # cuenca, celdas de lago en ella, y en que direcciones se abre.
+    import math
+    ox_, oy_ = xs[0], ys[0]
+    nf_tot = nf_vis = 0
+    for row in rows:
+        if row["funerario"] == "True":
+            continue
+        ux, uy = tcoords("EPSG:4326", UTM, [float(row["lon"])], [float(row["lat"])])
+        if math.hypot(ux[0] - ox_, uy[0] - oy_) > 10000:
+            continue
+        cc, ff = ~tr * (ux[0], uy[0])
+        nf_tot += 1
+        nf_vis += int(vs[int(round(ff)), int(round(cc))] == 1)
+    lago_vis = int(((np.abs(dem - 3808.5) < 0.05) & (vs == 1)).sum())
     json.dump({"observador": obs["nombre"].strip(), "altitud_m": round(float(obs["altitud"]), 1),
                "alcance_m": 10000, "radio_figura_m": 10500,
                "tumbas_en_figura": n_vis + n_oc, "tumbas_visibles": n_vis,
-               "tumbas_ocultas": n_oc},
+               "tumbas_ocultas": n_oc,
+               "no_funerarios_a_10km": nf_tot, "no_funerarios_visibles": nf_vis,
+               "celdas_lago_visibles": lago_vis},
               open(os.path.join(RES, "cuenca_torre.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=2)
     print("-> %s | visibles %d, ocultos %d" % (out, n_vis, n_oc))

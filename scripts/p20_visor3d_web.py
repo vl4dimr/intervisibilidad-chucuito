@@ -32,7 +32,7 @@ from rasterio.warp import transform as tcoords
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA, RES = os.path.join(BASE, "data"), os.path.join(BASE, "results")
 UTM = "EPSG:32719"
-N = 220   # lado de la malla del visor (submuestreo)
+N = 360   # lado de la malla del visor (submuestreo)
 
 
 def main():
@@ -55,22 +55,30 @@ def main():
     z = dem[np.ix_(fy, fx)]
     vcrop = vs[np.ix_(fy, fx)]
 
-    # --- textura: hipsometrico + sombreado + cuenca ------------------------
-    hips = LinearSegmentedColormap.from_list("h",
-        ["#eef2ea", "#d9dfc9", "#c3b795", "#a8875f", "#8a6a4a", "#7d6a63"])
-    ls = LightSource(azdeg=315, altdeg=45)
-    rgb = ls.shade(z, cmap=hips, blend_mode="soft", vert_exag=5,
-                   dx=30, dy=30)[:, :, :3]
-    agua = np.abs(z - 3808.5) < 0.05
-    rgb[agua] = (0.788, 0.847, 0.906)
-    vis = vcrop == 1
-    rgb[vis, 0] = 0.72 + 0.28 * rgb[vis, 0]
-    rgb[vis, 1] = 0.12 + 0.30 * rgb[vis, 1]
-    rgb[vis, 2] = 0.12 + 0.30 * rgb[vis, 2]
-
+    # --- textura: ortoimagen Sentinel-2 (p22) + cuenca visual drapeada -----
+    # Se lee la ortofoto exactamente en la ventana de la malla, a 10 m. La fila 0
+    # es el norte; Three.js (flipY) la coloca en v = 1, que en PlaneGeometry es
+    # el borde +y, es decir, el norte una vez rotado el plano. No se invierte.
+    from rasterio.windows import from_bounds
+    from rasterio.enums import Resampling as Rs
+    from scipy import ndimage
+    x0, y0 = tr.c + c0 * tr.a, tr.f + f0 * tr.e
+    x1, y1 = tr.c + c1 * tr.a, tr.f + f1 * tr.e
+    k = 3
+    with rasterio.open(os.path.join(DATA, "ortofoto_s2.tif")) as so:
+        win = from_bounds(x0, y1, x1, y0, transform=so.transform)
+        orto = so.read(window=win, out_shape=(3, k * (f1 - f0), k * (c1 - c0)),
+                       resampling=Rs.bilinear, boundless=True).transpose(1, 2, 0) / 255.0
+    v = np.kron(vs[f0:f1, c0:c1] == 1, np.ones((k, k), bool))
+    borde = v & ~ndimage.binary_erosion(v, iterations=2)
+    rojo = np.array([0.80, 0.07, 0.07])
+    orto[v] = 0.5 * orto[v] + 0.5 * rojo
+    orto[borde] = rojo
+    from PIL import Image
     buf = io.BytesIO()
-    plt.imsave(buf, np.flipud(rgb), format="png")
+    Image.fromarray((np.clip(orto, 0, 1) * 255).astype(np.uint8)).save(buf, "JPEG", quality=88)
     tex_b64 = base64.b64encode(buf.getvalue()).decode()
+    meta_o = json.load(open(os.path.join(RES, "ortofoto_s2.json"), encoding="utf-8"))
 
     # --- alturas normalizadas para Three.js --------------------------------
     z0 = float(z.min())
@@ -104,7 +112,9 @@ def main():
         "N": N, "lado_m": lado_m, "alturas": alturas.ravel().tolist(),
         "z_min": z0, "z_rango": float(z.max() - z.min()),
         "sitios": sitios, "n_fun": n_fun, "n_fun_vis": n_fun_vis,
-        "obs_nom": obs["nombre"].strip(), "obs_alt": obs["altitud"],
+        "obs_nom": " ".join(obs["nombre"].split()), "obs_alt": obs["altitud"],
+        "credito": "Copernicus DEM GLO-30 · %s" % meta_o["atribucion_es"],
+        "fecha_img": meta_o["fecha"],
     }
 
     html = PLANTILLA.replace("__TEX__", tex_b64).replace(
@@ -141,30 +151,39 @@ PLANTILLA = r"""<!doctype html>
      (<span id="onom"></span>, <span id="oalt"></span> m), en rojo sobre el
      relieve real.</p>
   <p><span class="k" style="background:#111827"></span>Torre observadora</p>
-  <p><span class="k" style="background:#b91c1c"></span>Otra torre funeraria
-     (<b class="r"><span id="nfv"></span> de <span id="nf"></span></b> visible)</p>
-  <p><span class="k" style="background:#3b4252"></span>Sitio no funerario</p>
+  <p><span class="k" style="background:rgba(204,18,18,.55);border-radius:2px"></span>Cuenca
+     visual de la torre (alcance 10 km)</p>
+  <p><span class="k" style="background:#334155"></span>Otra torre funeraria
+     (<b class="r"><span id="nfv"></span> de <span id="nf"></span></b> visibles desde la torre)</p>
+  <p><span class="k" style="background:#f8fafc"></span>Sitio no funerario</p>
   <p style="color:#94a3b8;font-size:11px;margin-top:8px">Exageración
-     vertical ×2.5. Copernicus DEM GLO-30.</p>
+     vertical ×1.8. <span id="cred"></span> (<span id="fimg"></span>).</p>
 </div>
 <div id="hint">Arrastra para orbitar · rueda para acercar · clic derecho para desplazar</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
 const D = __DATOS__;
 document.getElementById('onom').textContent = D.obs_nom;
 document.getElementById('oalt').textContent = Math.round(D.obs_alt);
 document.getElementById('nf').textContent = D.n_fun;
 document.getElementById('nfv').textContent = D.n_fun_vis;
+document.getElementById('cred').textContent = D.credito;
+document.getElementById('fimg').textContent = D.fecha_img;
 
-const N = D.N, LADO = 100, EXAG = 2.5;
+const N = D.N, LADO = 100, EXAG = 1.8;
 const escZ = (LADO / D.lado_m) * EXAG;
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0f1420);
-scene.fog = new THREE.Fog(0x0f1420, 180, 340);
+// cielo en degradado y bruma del mismo color que el horizonte
+const cv = document.createElement('canvas'); cv.width = 2; cv.height = 256;
+const g2 = cv.getContext('2d'); const gr = g2.createLinearGradient(0,0,0,256);
+gr.addColorStop(0,'#7898c8'); gr.addColorStop(1,'#d2dbe5');
+g2.fillStyle = gr; g2.fillRect(0,0,2,256);
+scene.background = new THREE.CanvasTexture(cv);
+scene.fog = new THREE.Fog(0xd2dbe5, 90, 260);
 const cam = new THREE.PerspectiveCamera(50, innerWidth/innerHeight, 0.1, 2000);
-cam.position.set(0, 90, 120);
+cam.position.set(25, 38, -70);
 const rnd = new THREE.WebGLRenderer({antialias:true});
 rnd.setSize(innerWidth, innerHeight);
 rnd.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -179,17 +198,19 @@ for (let i=0;i<pos.count;i++){
   pos.setZ(i, D.alturas[i]*escZ);
 }
 geo.computeVertexNormals();
-const tex = new THREE.TextureLoader().load('data:image/png;base64,__TEX__');
+const tex = new THREE.TextureLoader().load('data:image/jpeg;base64,__TEX__');
 tex.minFilter = THREE.LinearFilter;
-const mat = new THREE.MeshStandardMaterial({map:tex, roughness:.95, metalness:0});
+tex.anisotropy = rnd.capabilities.getMaxAnisotropy();
+const mat = new THREE.MeshLambertMaterial({map:tex});
 const terreno = new THREE.Mesh(geo, mat);
 terreno.rotation.x = -Math.PI/2;   // de plano XY a horizontal, altura en Y
 scene.add(terreno);
 
 // --- luces ---
-scene.add(new THREE.AmbientLight(0xffffff, .55));
-const sol = new THREE.DirectionalLight(0xffffff, .9);
-sol.position.set(-1, 1.4, .6); scene.add(sol);
+// la ortoimagen ya trae la luz real; el sol solo modela el relieve
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8a7a66, .75));
+const sol = new THREE.DirectionalLight(0xfff4e6, .45);
+sol.position.set(0.7, 1.2, -0.7); scene.add(sol);
 
 // --- sitios ---
 function aMundo(u, v, alt){
@@ -203,12 +224,15 @@ D.sitios.forEach(s=>{
         new THREE.MeshStandardMaterial({color:0x111827}));
     m.position.set(p.x, p.y+2, p.z);
   } else {
-    const col = s.fun ? 0xb91c1c : 0x3b4252;
-    const rad = s.fun ? 1.1 : 0.8;
+    const col = s.fun ? 0x334155 : 0xf8fafc;
+    const rad = s.fun ? 0.9 : 0.45;
+    const alto = s.fun ? 2.6 : 1.4;
+    const mastil = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, alto, 6),
+        new THREE.MeshLambertMaterial({color:0xe5e7eb}));
+    mastil.position.set(p.x, p.y+alto/2, p.z); scene.add(mastil);
     m = new THREE.Mesh(new THREE.SphereGeometry(rad, 16, 12),
-        new THREE.MeshStandardMaterial({color:col,
-          emissive: s.vis ? 0x661111 : 0x000000}));
-    m.position.set(p.x, p.y+rad, p.z);
+        new THREE.MeshLambertMaterial({color: (s.fun && s.vis) ? 0xcc1212 : col}));
+    m.position.set(p.x, p.y+alto+rad*0.6, p.z);
   }
   scene.add(m);
 });

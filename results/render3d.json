@@ -1,0 +1,162 @@
+{
+  "exageracion": 1.8,
+  "semilado_m": 11000.0,
+  "camara": {
+    "azimut_deg": 28.0,
+    "distancia_h_m": 14000.0,
+    "altura_m": 5200.0,
+    "angulo_vision_deg": 34.0
+  },
+  "sol": {
+    "azimut_deg": 39.12,
+    "elevacion_deg": 47.35
+  },
+  "bruma_l_m": 42000.0,
+  "supermuestreo": 2,
+  "tumbas": [
+    {
+      "id": "4",
+      "visible_desde_torre": false,
+      "pantalla": [
+        1764.0772268011208,
+        828.9587746439065
+      ],
+      "visible_en_render": false
+    },
+    {
+      "id": "6",
+      "visible_desde_torre": false,
+      "pantalla": [
+        1712.9802964018372,
+        798.5999615914129
+      ],
+      "visible_en_render": false
+    },
+    {
+      "id": "23",
+      "visible_desde_torre": false,
+      "pantalla": [
+        1522.4431303257231,
+        1083.7053472843083
+      ],
+      "visible_en_render": false
+    },
+    {
+      "id": "37",
+      "visible_desde_torre": false,
+      "pantalla": [
+        1204.4946980061704,
+        644.7479391498271
+      ],
+      "visible_en_render": false
+    },
+    {
+      "id": "38",
+      "visible_desde_torre": false,
+      "pantalla": [
+        1212.7174950603444,
+        640.5168217772905
+      ],
+      "visible_en_render": false
+    },
+    {
+      "id": "39",
+      "visible_desde_torre": false,
+      "pantalla": [
+        1211.7542216998002,
+        620.2531068717303
+      ],
+      "visible_en_render": false
+    },
+    {
+      "id": "113",
+      "visible_desde_torre": false,
+      "pantalla": [
+        961.6171637620729,
+        488.82487747659934
+      ],
+      "visible_en_render": true
+    },
+    {
+      "id": "114",
+      "visible_desde_torre": false,
+      "pantalla": [
+        980.5373510914553,
+        495.48660493760167
+      ],
+      "visible_en_render": true
+    },
+    {
+      "id": "138",
+      "visible_desde_torre": false,
+      "pantalla": [
+        1012.6953066513472,
+        433.61386460195274
+      ],
+      "visible_en_render": false
+    },
+    {
+      "id": "142",
+      "visible_desde_torre": false,
+      "pantalla": [
+        1171.7370339419374,
+        487.44144863427425
+      ],
+      "visible_en_render": false
+    },
+    {
+      "id": "143",
+      "visible_desde_torre": false,
+      "pantalla": [
+        1091.7709382955163,
+        477.3929624290013
+      ],
+      "visible_en_render": true
+    },
+    {
+      "id": "156",
+      "visible_desde_torre": false,
+      "pantalla": [
+        1274.0297043863793,
+        590.566313507836
+      ],
+      "visible_en_render": false
+    },
+    {
+      "id": "157",
+      "visible_desde_torre": false,
+      "pantalla": [
+        1275.0059276910738,
+        590.1177862889201
+      ],
+      "visible_en_render": false
+    },
+    {
+      "id": "158",
+      "visible_desde_torre": false,
+      "pantalla": [
+        1269.671463472779,
+        590.5527464076895
+      ],
+      "visible_en_render": false
+    },
+    {
+      "id": "159",
+      "visible_desde_torre": false,
+      "pantalla": [
+        1201.817518281798,
+        603.0819341516059
+      ],
+      "visible_en_render": false
+    },
+    {
+      "id": "162",
+      "visible_desde_torre": false,
+      "pantalla": [
+        1012.8859434739717,
+        640.5879328602518
+      ],
+      "visible_en_render": true
+    }
+  ]
+}

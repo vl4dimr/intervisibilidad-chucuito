@@ -100,20 +100,23 @@ frente a 6 667 m del total), el patrón que Fisher (1993) describió. `results/v
 
 ## El paisaje visual en 3D
 
-La misma cuenca visual se presenta de tres formas, todas generadas por código a partir de los mismos ficheros:
+La misma cuenca visual se presenta de tres formas, todas generadas por código y texturizadas con una
+ortoimagen **Copernicus Sentinel-2 L2A** en color natural (10 m, estación seca, 3 de agosto de 2025;
+`scripts/p22_ortofoto_sentinel2.py` la descarga del catálogo STAC público de Earth Search y deja
+`data/ortofoto_s2.tif` y `results/ortofoto_s2.json`). Contiene datos modificados de Copernicus Sentinel 2025.
 
 | Vista | Fichero | Cómo se genera |
 |---|---|---|
-| Planta con sombreado, cuenca y tumbas | `results/figuras/fig3d_planta.png` | `PLANTA=1 python scripts/p18_fig3d_cuenca.py` |
-| Perspectiva 3D con oclusión correcta (algoritmo del pintor) | `results/figuras/fig3d_perspectiva.png` | `python scripts/p21_fig3d_perspectiva.py` |
-| Visor web interactivo autocontenido (Three.js, un solo HTML) | `chucuito_visor3d.html` | `python scripts/p20_visor3d_web.py` |
+| Planta sobre la ortoimagen, con cuenca y tumbas | `results/figuras/fig3d_planta.png` | `PLANTA=1 python scripts/p18_fig3d_cuenca.py` |
+| Perspectiva 3D realista: VTK en GPU, ortoimagen, sol de la toma, perspectiva aérea | `results/figuras/fig3d_perspectiva.png` | `python scripts/p23_render3d_realista.py` |
+| Visor web interactivo autocontenido (Three.js, un solo HTML con la ortoimagen) | `chucuito_visor3d.html` | `python scripts/p20_visor3d_web.py` |
 | Proyecto QGIS listo para la vista de mapa 3D | `chucuito_3d.qgz` | `python-qgis-ltr scripts/p19_proyecto_qgis.py` |
 
-Desde esa torre, **0 de las 16** tumbas situadas a menos de 10 km son visibles (`results/cuenca_torre.json`):
-es la versión en una imagen del resultado de la subred funeraria. La perspectiva con `plot_surface`
-(`p16_render3d.py`, `fig3d_cuenca.png`) se conserva como exploración: matplotlib no ordena en profundidad los
-marcadores y las tumbas desaparecen tras el relieve; `p21` resuelve ese problema pintando celdas y marcadores
-de atrás hacia delante.
+Desde esa torre son visibles **0 de las 16** tumbas y **3 de los 144** sitios no funerarios situados a menos
+de 10 km, y ninguna celda del lago (`results/cuenca_torre.json`): la torre más alta está visualmente
+recluida. Hasta el 1/10/2026 la planta dibujaba los sitios invertidos de norte a sur (cinco tumbas aparecían
+en el lago) y el visor web no arrancaba porque OrbitControls se pedía a una dirección de cdnjs inexistente;
+ambos errores están corregidos. `p16`, `p21` y `fig3d_cuenca.png` se conservan como versiones anteriores.
 
 ## Guiones
 
@@ -137,7 +140,8 @@ python scripts/p13_artefacto_agua.py    # contraejemplo: nulo sin enmascarar el 
 python scripts/p17_viewshed_cruzada.py  # validación cruzada: motor propio frente a gdal_viewshed (QGIS)
 PLANTA=1 python scripts/p18_fig3d_cuenca.py   # cuenca de la torre más alta en planta + cuenca_torre.json
 python scripts/p20_visor3d_web.py       # visor web 3D interactivo (chucuito_visor3d.html)
-python scripts/p21_fig3d_perspectiva.py # perspectiva 3D por algoritmo del pintor
+python scripts/p22_ortofoto_sentinel2.py  # ortoimagen Sentinel-2 de estación seca (red)
+python scripts/p23_render3d_realista.py   # perspectiva 3D realista (VTK/PyVista, GPU)
 "C:\Program Files\QGIS 3.44.13\bin\python-qgis-ltr.bat" scripts\p19_proyecto_qgis.py  # proyecto QGIS 3D
 ```
 

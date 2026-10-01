@@ -5,5 +5,8 @@
   "radio_figura_m": 10500,
   "tumbas_en_figura": 16,
   "tumbas_visibles": 0,
-  "tumbas_ocultas": 16
+  "tumbas_ocultas": 16,
+  "no_funerarios_a_10km": 144,
+  "no_funerarios_visibles": 3,
+  "celdas_lago_visibles": 0
 }

@@ -84,7 +84,7 @@
       "bloque": "figuras",
       "check": "fig3d_perspectiva.png: resolución",
       "ok": true,
-      "detalle": "2880x1920 px, 299 dpi"
+      "detalle": "2008x1210 px, 299 dpi"
     },
     {
       "bloque": "figuras",
@@ -294,7 +294,7 @@
       "bloque": "plantilla",
       "check": "extended abstract en inglés, de 600 a 900 palabras",
       "ok": true,
-      "detalle": "892 palabras"
+      "detalle": "900 palabras"
     },
     {
       "bloque": "plantilla",
@@ -342,7 +342,7 @@
       "bloque": "plantilla",
       "check": "cuerpo del artículo de 5 500 palabras como mínimo",
       "ok": true,
-      "detalle": "7291 palabras"
+      "detalle": "7560 palabras"
     },
     {
       "bloque": "plantilla",
